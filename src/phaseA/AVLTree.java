@@ -32,6 +32,81 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 		super(c);
 	}
 	
-	// TODO: To-be implemented
+	public void incCount(E data) {
+		overallRoot = insert((AVLNode) overallRoot, data);
+	}
+	
+	private AVLNode insert(AVLNode current, E data) {
+		if (current == null) {
+			current = new AVLNode(data);
+			return current;
+		}
+		AVLNode left = (AVLNode) current.left;
+		AVLNode right = (AVLNode) current.right;
+		int cmp = comparator.compare(data, current.data);
+    	if(cmp == 0) {            // a. Current node is a match
+    		current.count++;
+        }else if(cmp < 0) {       // b. Data goes left of current node
+        	
+        	if (left.height - right.height > 1) {
+
+        		if (comparator.compare(data, left.left.data) < 0) {
+        			current = rotateLeftLeft(current);
+        		} else {
+        			current = rotateLeftRight(current);
+        		}
+            	left = (AVLNode) insert(left, data);
+        	} 
+        }else{                    // c. Data goes right of current node
+  
+        	if (right.height - left.height > 1) {
+        		if (comparator.compare(data, left.left.data) < 0) {
+        			current = rotateRightLeft(current);
+        		} else {
+        			current = rotateRightRight(current);
+        		}
+        	} 
+        	right = (AVLNode) insert(right, data);
+        }
+    	current.height = Math.max(left.height, right.height) + 1;
+    	return current;
+	}
+	
+	private AVLNode rotateLeftLeft(AVLNode current) {
+		AVLNode left = (AVLNode) current.left;
+		AVLNode newCurrent = left; 
+		AVLNode leftRight = (AVLNode) left.right;
+		current.left = leftRight;
+		newCurrent.right = current;
+		return newCurrent;
+	}
+	
+	private AVLNode rotateLeftRight(AVLNode current) {
+		current.left = rotateRightRight((AVLNode) current.left);
+		return rotateLeftLeft(current);
+	}
+	
+	private AVLNode rotateRightLeft(AVLNode current) {
+		current.right = rotateLeftLeft((AVLNode) current.right);
+		return rotateRightRight(current);
+	}
+	
+	private AVLNode rotateRightRight(AVLNode current) {
+		AVLNode right = (AVLNode) current.right;
+		AVLNode rightLeft = (AVLNode) right.left;
+		AVLNode newCurrent = right;
+		current.right = (AVLNode) rightLeft;
+		newCurrent.left = current;
+		return newCurrent;
+	}
+	
+	protected class AVLNode extends BSTNode {
+		int height;
+		
+		public AVLNode(E data) {
+			super(data);
+			this.height = 0;
+		}
+	}
 
 }

@@ -1,4 +1,6 @@
 package phaseA;
+import java.util.NoSuchElementException;
+
 import providedCode.*;
 
 
@@ -38,32 +40,61 @@ import providedCode.*;
  */
 public class FourHeap<E> extends Heap<E> {
 	
+	Comparator<? super E> comparator;
+	
 	public FourHeap(Comparator<? super E> c) {
-		// TODO: To-be implemented. Replace the dummy parameter to superclass constructor.
-		super(0);
+		super(10);
+		this.comparator = c;
 	}
 
 	@Override
 	public void insert(E item) {
-		// TODO Auto-generated method stub
+		size++;
+		if (size > heapArray.length) {
+			doubleSize();
+		}
+		heapArray[size - 1] = item;
+		percolateUp();
+	}
+	
+	private void doubleSize() {
+		size *= 2;
+		this.heapArray = (E[]) new Object[size];
 	}
 
 	@Override
 	public E findMin() {
-		// TODO Auto-generated method stub
-		return null;
+		return heapArray[0];
 	}
 
 	@Override
 	public E deleteMin() {
-		// TODO Auto-generated method stub
-		return null;
+		if (size == 0) {
+			throw new NoSuchElementException();
+		}
+		E min = heapArray[0];
+		int hole = percolateDown(0, heapArray[size - 1]);
+		size--;
+		return min;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size == 0;
+	}
+	
+	private void percolateUp() {
+		
+	}
+	
+	private int percolateDown(int hole, E last) {
+		while (4 * hole <= size) {
+			int first = 4 * hole + 1;
+			int second = 4 * hole + 2;
+			int third = 4 * hole + 3;
+			int fourth = 4 * hole + 4;
+		}
+		return hole;
 	}
 
 }

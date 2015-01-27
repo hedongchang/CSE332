@@ -26,6 +26,21 @@ public class StringComparator implements Comparator<String>{
 	@Override
 	public int compare(String s1, String s2) {
 		// TODO: To-be implemented
-		return 0;
+		for (int i = 0; i < Math.min(s1.length(), s2.length()); i++) {
+			char ch1 = s1.charAt(i);
+			char ch2 = s2.charAt(i);
+			if (ch1 > ch2) {
+				return 1;
+			} else if (ch1 < ch2) {
+				return -1;
+			}
+		}
+		return s1.length() - s2.length();
+	}
+	
+	public static void main(String[] args) {
+		System.out.println("aa".compareTo("aaa"));
+		StringComparator sc = new StringComparator();
+		System.out.println(sc.compare("aa", "aaa"));
 	}
 }

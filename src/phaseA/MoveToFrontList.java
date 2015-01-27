@@ -1,4 +1,5 @@
 package phaseA;
+
 import providedCode.*;
 
 
@@ -17,33 +18,101 @@ import providedCode.*;
  * TODO: Develop appropriate JUnit tests for your MoveToFrontList.
  */
 public class MoveToFrontList<E> extends DataCounter<E> {
-
+	
+	public ListNode front;
+	public Comparator<? super E> comparator;
+	
+	public class ListNode {
+		E data;
+		int count;
+		ListNode next;
+		
+		public ListNode(E count) {
+			this.data = count;
+			this.count = 1;
+			this.next = null;
+		}
+	}
 	
 	public MoveToFrontList(Comparator<? super E> c) {
-		// TODO: To-be implemented
+		this.comparator = c;
+		this.front = null;
 	}
 	
 	@Override
 	public void incCount(E data) {
-		// TODO Auto-generated method stub
+		if (front == null) {
+            front = new ListNode(data);
+            return;
+        }
+		ListNode current = front;
+		while (current.next != null) {
+			int com = comparator.compare(current.next.data, data);
+			if (com == 0) {
+				current.next.count++;
+				ListNode newFront = current.next;
+				current.next = current.next.next;
+				// delete the node
+				newFront.next = front;
+				front = newFront;
+			}
+		}
+		ListNode newFront = new ListNode(data);
+		newFront.next = front;
+		front = newFront;
 	}
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		int size = 0;
+		ListNode current = front;
+		while (current != null) {
+			size++;
+		}
+		return size;
 	}
-
+	
 	@Override
 	public int getCount(E data) {
-		// TODO Auto-generated method stub
+		if (front != null) {
+			ListNode current = front;
+			while (current.next != null) {
+				if (current.next.data == data) {
+					ListNode newFront = current.next;
+					current.next = current.next.next;
+					// delete the node
+					newFront.next = front;
+					front = newFront;
+					return current.next.count;
+				}
+			}
+		}
 		return 0;
 	}
 
 	@Override
 	public SimpleIterator<DataCount<E>> getIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SimpleIterator<DataCount<E>>() {
+			GStack<ListNode> stack = new GArrayStack<ListNode>(); 
+			{
+				if (front != null) {
+					stack.push(front);
+				}
+			}
+			public boolean hasNext() {
+				return stack.isEmpty();
+			}
+			public DataCount<E> next() {
+        		if(!hasNext()) {
+        			throw new java.util.NoSuchElementException();
+        		}
+        		ListNode nextNode = stack.pop();
+        		if(nextNode.next != null) {
+        			stack.push(nextNode);
+        		}
+        		return new DataCount<E>(nextNode.data, nextNode.count);
+        	}
+		};
 	}
 
 }
