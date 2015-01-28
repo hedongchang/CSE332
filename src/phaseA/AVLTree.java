@@ -49,16 +49,15 @@ public class AVLTree<E> extends BinarySearchTree<E> {
         }else if(cmp < 0) {       // b. Data goes left of current node
         	
         	if (left.height - right.height > 1) {
-
+            	left = (AVLNode) insert(left, data);
         		if (comparator.compare(data, left.left.data) < 0) {
         			current = rotateLeftLeft(current);
         		} else {
         			current = rotateLeftRight(current);
         		}
-            	left = (AVLNode) insert(left, data);
         	} 
         }else{                    // c. Data goes right of current node
-  
+        	right = (AVLNode) insert(right, data);
         	if (right.height - left.height > 1) {
         		if (comparator.compare(data, left.left.data) < 0) {
         			current = rotateRightLeft(current);
@@ -66,7 +65,6 @@ public class AVLTree<E> extends BinarySearchTree<E> {
         			current = rotateRightRight(current);
         		}
         	} 
-        	right = (AVLNode) insert(right, data);
         }
     	current.height = Math.max(left.height, right.height) + 1;
     	return current;
