@@ -27,6 +27,8 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		int count;
 		ListNode next;
 		
+		/* @param Count of the number of nodes.
+		 * @effects Constructs a new list node, store its count number as its data.*/
 		public ListNode(E count) {
 			this.data = count;
 			this.count = 1;
@@ -34,11 +36,18 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		}
 	}
 	
+	/* @param A comparator.
+	 * @effects Constructs a new MoveToFrontList. */
 	public MoveToFrontList(Comparator<? super E> c) {
 		this.comparator = c;
 		this.front = null;
 	}
 	
+	/* @param A data
+	 * @effects Find the node with this data in the MoveToFrontList,
+	 *          and move it from the original position to the front.
+	 *          If the list is null, add a new node with this data.
+	 *          If there is no this node, add a new node with this data to the front.*/
 	@Override
 	public void incCount(E data) {
 		if (front == null) {
@@ -55,13 +64,15 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 				// delete the node
 				newFront.next = front;
 				front = newFront;
+				return;
 			}
 		}
 		ListNode newFront = new ListNode(data);
 		newFront.next = front;
 		front = newFront;
 	}
-
+    
+	/* @return The size of the MoveToFrontList */
 	@Override
 	public int getSize() {
 		int size = 0;
@@ -72,6 +83,11 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		return size;
 	}
 	
+	/** @param data: value of the node 
+	 * @requires this.front does not equal to null
+	 * @effect Move the node with the data to the front.
+	 * @return The count number of the node with the data
+	 **/
 	@Override
 	public int getCount(E data) {
 		if (front != null) {
@@ -83,7 +99,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 					// delete the node
 					newFront.next = front;
 					front = newFront;
-					return current.next.count;
+					return front.count;
 				}
 			}
 		}
@@ -100,7 +116,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 				}
 			}
 			public boolean hasNext() {
-				return stack.isEmpty();
+				return !stack.isEmpty();
 			}
 			public DataCount<E> next() {
         		if(!hasNext()) {

@@ -54,7 +54,7 @@ public class FourHeap<E> extends Heap<E> {
 			doubleSize();
 		}
 		heapArray[size - 1] = item;
-		percolateUp();
+		percolateUp(size - 1);
 	}
 	
 	private void doubleSize() {
@@ -74,6 +74,7 @@ public class FourHeap<E> extends Heap<E> {
 		}
 		E min = heapArray[0];
 		int hole = percolateDown(0, heapArray[size - 1]);
+		heapArray[hole] = heapArray[size];
 		size--;
 		return min;
 	}
@@ -83,16 +84,28 @@ public class FourHeap<E> extends Heap<E> {
 		return size == 0;
 	}
 	
-	private void percolateUp() {
-		
+	private void percolateUp(int hole) {
+		while (hole > 0 && comparator.compare(heapArray[hole], heapArray[(hole - 1) / 4]) < 0) {
+			E temp = heapArray[(hole - 1) / 4];
+			heapArray[(hole - 1) / 4] = heapArray[hole];
+			heapArray[hole] = temp;
+		}
 	}
 	
-	private int percolateDown(int hole, E last) {
+	private int percolateDown(int hole, E val) {
 		while (4 * hole <= size) {
-			int first = 4 * hole + 1;
-			int second = 4 * hole + 2;
-			int third = 4 * hole + 3;
-			int fourth = 4 * hole + 4;
+			int minIndex = 4 * hole + 1;
+			for (int i = 2; i <= 4; i++) {
+				if (comparator.compare(heapArray[4 * hole + i], heapArray[minIndex]) < 0) {
+					minIndex = 4 * hole + i;
+				}
+			}
+			if (comparator.compare(heapArray[minIndex], val) < 0) {
+				heapArray[hole] = heapArray[minIndex];
+				hole = minIndex;
+			} else {
+				break;
+			}
 		}
 		return hole;
 	}
