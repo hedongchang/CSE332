@@ -35,7 +35,7 @@ public class TestAVLTree<E> extends TestBinarySearchTree {
 	
 	@Test(timeout = TIMEOUT)
 	public void test_one_node_height() {
-		dc.incCount("a");
+		AVLTree.incCount("a");
 		assertEquals("The height of [a]", 0, AVLTree.getHeight());	
 	}
 

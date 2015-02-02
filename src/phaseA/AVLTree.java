@@ -27,6 +27,15 @@ import providedCode.*;
  * in testA package).
  */
 public class AVLTree<E> extends BinarySearchTree<E> {
+	
+	private class AVLNode extends BSTNode {
+		public int height;
+		
+		public AVLNode(E data) {
+			super(data);
+			this.height = 0;
+		}
+	}
     
 	/*@effects Constructs a new AVL Tree.*/
 	public AVLTree(Comparator<? super E> c) {
@@ -35,6 +44,8 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	/*@param General type data
 	  @effects  */
+	@SuppressWarnings("unchecked")
+	@Override
 	public void incCount(E data) {
 		overallRoot = insert((AVLNode) overallRoot, data);
 	}
@@ -50,10 +61,10 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 		}
 
 		int cmp = comparator.compare(data, current.data);
-    	if(cmp == 0) {            // a. Current node is a match
+    	if (cmp == 0) {            // a. Current node is a match
     		current.count++;
         }else if(cmp < 0) {       // b. Data goes left of current node
-        	current.left = insert((AVLNode) current.right, data);
+        	current.left = insert((AVLNode) current.left, data);
         	if (height(current.left) - height(current.right) > 1) {
         		if (comparator.compare(data, current.left.data) < 0) {
         			//singleRotateRight
@@ -62,7 +73,7 @@ public class AVLTree<E> extends BinarySearchTree<E> {
         			current = rotateLeftRight(current);
         		}
         	} 
-        }else{                    // c. Data goes right of current node
+        } else {                    // c. Data goes right of current node
         	current.right = insert((AVLNode) current.right, data);
         	if (height(current.right) - height(current.left) > 1) {
         		if (comparator.compare(data, current.right.data) < 0) {
@@ -79,7 +90,7 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	@SuppressWarnings("unchecked")
 	private int height(BSTNode current) {
-		if(current == null) {
+		if (current == null) {
 			return -1;
 	    } else {
 	    	return ((AVLNode) current).height;
@@ -87,10 +98,11 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	}
 	
 	//singleRotateRight
+	@SuppressWarnings("unchecked")
 	private AVLNode rotateLeftLeft(BSTNode current) {
-		AVLNode left = (AVLNode) current.left;
-		AVLNode leftRight = (AVLNode) left.right;
-		AVLNode newCurrent = left; 
+		BSTNode left = current.left;
+		BSTNode leftRight = left.right;
+		AVLNode newCurrent = (AVLNode) left; 
 		current.left = leftRight;
 		newCurrent.right = current;
 		
@@ -102,21 +114,22 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	//doubleRotateRight
 	private AVLNode rotateLeftRight(BSTNode current) {
-		current.left = rotateRightRight((AVLNode) current.left);
+		current.left = rotateRightRight(current.left);
 		return rotateLeftLeft(current);
 	}
 	
 	//doubleRotateLeft
 	private AVLNode rotateRightLeft(BSTNode current) {
-		current.right = rotateLeftLeft((AVLNode) current.right);
+		current.right = rotateLeftLeft(current.right);
 		return rotateRightRight(current);
 	}
 	
 	//singleRotateLeft
+	@SuppressWarnings("unchecked")
 	private AVLNode rotateRightRight(BSTNode current) {
-		AVLNode right = (AVLNode) current.right;
-		AVLNode rightLeft = (AVLNode) right.left;
-		AVLNode newCurrent = right;
+		BSTNode right = current.right;
+		BSTNode rightLeft = right.left;
+		AVLNode newCurrent = (AVLNode) right;
 		current.right = rightLeft;
 		newCurrent.left = current;
 		AVLNode temp = (AVLNode) current;
@@ -124,15 +137,6 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 		temp.height = Math.max(height(current.right), height(current.left)) + 1;
 		newCurrent.height = Math.max(height(newCurrent.right), temp.height) + 1;
 		return newCurrent;
-	}
-	
-	protected class AVLNode extends BSTNode {
-		int height;
-		
-		public AVLNode(E data) {
-			super(data);
-			this.height = 0;
-		}
 	}
 
 }
