@@ -25,7 +25,6 @@ public class StringComparator implements Comparator<String>{
 
 	@Override
 	public int compare(String s1, String s2) {
-		// TODO: To-be implemented
 		for (int i = 0; i < Math.min(s1.length(), s2.length()); i++) {
 			char ch1 = s1.charAt(i);
 			char ch2 = s2.charAt(i);

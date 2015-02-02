@@ -27,74 +27,102 @@ import providedCode.*;
  * in testA package).
  */
 public class AVLTree<E> extends BinarySearchTree<E> {
-
+    
+	/*@effects Constructs a new AVL Tree.*/
 	public AVLTree(Comparator<? super E> c) {
 		super(c);
 	}
 	
+	/*@param General type data
+	  @effects  */
 	public void incCount(E data) {
 		overallRoot = insert((AVLNode) overallRoot, data);
 	}
 	
+	public int getHeight() {
+		return height(overallRoot);
+	}
+	
+	@SuppressWarnings("unchecked")
 	private AVLNode insert(AVLNode current, E data) {
 		if (current == null) {
-			current = new AVLNode(data);
-			return current;
+			return new AVLNode(data);
 		}
-		AVLNode left = (AVLNode) current.left;
-		AVLNode right = (AVLNode) current.right;
+
 		int cmp = comparator.compare(data, current.data);
     	if(cmp == 0) {            // a. Current node is a match
     		current.count++;
         }else if(cmp < 0) {       // b. Data goes left of current node
-        	
-        	if (left.height - right.height > 1) {
-            	left = (AVLNode) insert(left, data);
-        		if (comparator.compare(data, left.left.data) < 0) {
+        	current.left = insert((AVLNode) current.right, data);
+        	if (height(current.left) - height(current.right) > 1) {
+        		if (comparator.compare(data, current.left.data) < 0) {
+        			//singleRotateRight
         			current = rotateLeftLeft(current);
         		} else {
         			current = rotateLeftRight(current);
         		}
         	} 
         }else{                    // c. Data goes right of current node
-        	right = (AVLNode) insert(right, data);
-        	if (right.height - left.height > 1) {
-        		if (comparator.compare(data, left.left.data) < 0) {
+        	current.right = insert((AVLNode) current.right, data);
+        	if (height(current.right) - height(current.left) > 1) {
+        		if (comparator.compare(data, current.right.data) < 0) {
         			current = rotateRightLeft(current);
         		} else {
+        			//singleRotateLeft
         			current = rotateRightRight(current);
         		}
         	} 
         }
-    	current.height = Math.max(left.height, right.height) + 1;
+    	current.height = Math.max(height(current.left), height(current.right)) + 1;
     	return current;
 	}
 	
-	private AVLNode rotateLeftLeft(AVLNode current) {
+	@SuppressWarnings("unchecked")
+	private int height(BSTNode current) {
+		if(current == null) {
+			return -1;
+	    } else {
+	    	return ((AVLNode) current).height;
+	    }
+	}
+	
+	//singleRotateRight
+	private AVLNode rotateLeftLeft(BSTNode current) {
 		AVLNode left = (AVLNode) current.left;
-		AVLNode newCurrent = left; 
 		AVLNode leftRight = (AVLNode) left.right;
+		AVLNode newCurrent = left; 
 		current.left = leftRight;
 		newCurrent.right = current;
+		
+		AVLNode temp = (AVLNode) current;
+		temp.height = Math.max(height(current.right), height(current.left)) + 1;
+		newCurrent.height = Math.max(height(newCurrent.left), temp.height) + 1;
 		return newCurrent;
 	}
 	
-	private AVLNode rotateLeftRight(AVLNode current) {
+	//doubleRotateRight
+	private AVLNode rotateLeftRight(BSTNode current) {
 		current.left = rotateRightRight((AVLNode) current.left);
 		return rotateLeftLeft(current);
 	}
 	
-	private AVLNode rotateRightLeft(AVLNode current) {
+	//doubleRotateLeft
+	private AVLNode rotateRightLeft(BSTNode current) {
 		current.right = rotateLeftLeft((AVLNode) current.right);
 		return rotateRightRight(current);
 	}
 	
-	private AVLNode rotateRightRight(AVLNode current) {
+	//singleRotateLeft
+	private AVLNode rotateRightRight(BSTNode current) {
 		AVLNode right = (AVLNode) current.right;
 		AVLNode rightLeft = (AVLNode) right.left;
 		AVLNode newCurrent = right;
-		current.right = (AVLNode) rightLeft;
+		current.right = rightLeft;
 		newCurrent.left = current;
+		AVLNode temp = (AVLNode) current;
+		
+		temp.height = Math.max(height(current.right), height(current.left)) + 1;
+		newCurrent.height = Math.max(height(newCurrent.right), temp.height) + 1;
 		return newCurrent;
 	}
 	

@@ -22,7 +22,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	public ListNode front;
 	public Comparator<? super E> comparator;
 	
-	public class ListNode {
+	private class ListNode {
 		E data;
 		int count;
 		ListNode next;
@@ -51,25 +51,29 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	@Override
 	public void incCount(E data) {
 		if (front == null) {
-            front = new ListNode(data);
-            return;
-        }
-		ListNode current = front;
-		while (current.next != null) {
-			int com = comparator.compare(current.next.data, data);
-			if (com == 0) {
-				current.next.count++;
-				ListNode newFront = current.next;
-				current.next = current.next.next;
-				// delete the node
-				newFront.next = front;
-				front = newFront;
+           this.front = new ListNode(data);
+		} else {
+			if (comparator.compare(data, front.data) == 0) {
+				front.count++;
 				return;
 			}
+			ListNode current = front;
+			while (current.next != null) {
+				int com = comparator.compare(data, current.next.data);
+				if (com == 0) {
+					ListNode newFront = current.next;
+					current.next=current.next.next;
+					newFront.next = front;
+					front = newFront;
+					front.count++;
+					return;
+				}
+				current=current.next;
+			}
+			ListNode newFront = new ListNode(data);
+			newFront.next = front;
+			front = newFront;
 		}
-		ListNode newFront = new ListNode(data);
-		newFront.next = front;
-		front = newFront;
 	}
     
 	/* @return The size of the MoveToFrontList */
@@ -79,6 +83,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		ListNode current = front;
 		while (current != null) {
 			size++;
+			current = current.next;
 		}
 		return size;
 	}
@@ -92,8 +97,11 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	public int getCount(E data) {
 		if (front != null) {
 			ListNode current = front;
+			if (comparator.compare(front.data, data) == 0) {
+				return front.count;
+			}
 			while (current.next != null) {
-				if (current.next.data == data) {
+				if (comparator.compare(current.next.data, data) == 0) {
 					ListNode newFront = current.next;
 					current.next = current.next.next;
 					// delete the node
@@ -101,6 +109,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 					front = newFront;
 					return front.count;
 				}
+				current = current.next;
 			}
 		}
 		return 0;
@@ -109,23 +118,16 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	@Override
 	public SimpleIterator<DataCount<E>> getIterator() {
 		return new SimpleIterator<DataCount<E>>() {
-			GStack<ListNode> stack = new GArrayStack<ListNode>(); 
-			{
-				if (front != null) {
-					stack.push(front);
-				}
-			}
+			ListNode current = front;
 			public boolean hasNext() {
-				return !stack.isEmpty();
+				return current != null;
 			}
 			public DataCount<E> next() {
         		if(!hasNext()) {
         			throw new java.util.NoSuchElementException();
         		}
-        		ListNode nextNode = stack.pop();
-        		if(nextNode.next != null) {
-        			stack.push(nextNode);
-        		}
+        		ListNode nextNode = current;
+        		current = current.next;
         		return new DataCount<E>(nextNode.data, nextNode.count);
         	}
 		};
