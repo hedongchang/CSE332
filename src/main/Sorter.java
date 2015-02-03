@@ -1,13 +1,17 @@
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
 package main;
 import phaseA.FourHeap;
 import providedCode.Comparator;
 
 
 /** 
- *  TODO: REPLACE this comment with your own as appropriate.
- *  Implement the sorting methods below. Do not change the provided
- *  method signature, but you may add as many other methods as you
- *  want.
+ * This program implements multiple sorting algorithms to sort array from the maximum 
+ * value to the minimum value.
  */
 public class Sorter {
 	
@@ -31,6 +35,11 @@ public class Sorter {
         }
     }
     
+    /** Sort the array from minimum value to maximum value
+     * @param array that needs to be sorted
+     * @param comparator
+     * @effects Sort the given array.
+     */
     public static <E> void heapSort(E[] array, Comparator<E> comparator) {
     	FourHeap<E> heap = new FourHeap<E>(comparator);
     	for (int i = 0; i < array.length; i++) {

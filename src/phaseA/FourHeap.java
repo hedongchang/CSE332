@@ -73,9 +73,7 @@ public class FourHeap<E> extends Heap<E> {
 		return heapArray[0];
 	}
 	
-	/** If one element is deleted, the last element at the bottom will be put into that hole,
-	 * it will be moved down to the appropriate position where its value must larger than 
-	 * the value of its parents and smaller than its children.
+	/** Delete the minimum value in current heap
 	 * @modifies the heap by deleting the element with minimum value.
 	 * @requires the heap is not empty.
 	 * @exception if the heap is empty, throws NoSuchElementException.
@@ -96,7 +94,6 @@ public class FourHeap<E> extends Heap<E> {
 	}
 	
 	/** Check whether the current heap is empty.
-	 * @effects Check whether the heap is empty.
 	 * @return true if size is empty; false if not.
 	 */
 	@Override
@@ -127,7 +124,7 @@ public class FourHeap<E> extends Heap<E> {
 	/**
 	 * Compares the value of the element and the value of its four children. 
 	 * If one of its children is smaller than it, we move the element down one
-	 * position by exchanging it with its children. This action continues 
+	 * position by exchanging it with its smallest children. This action continues 
 	 * until the element find a position where all its four children are larger 
 	 * than it or it approaches the bottom of the heap.
 	 * @param hole: the index of the element need to be moved down.

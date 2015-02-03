@@ -13,7 +13,7 @@ import providedCode.*;
  *  in no larger than 1, in which case it is balanced. The top of the tree
  *  will be the minimum value of this tree. The left child's value should be smaller than
  *  its parent, and the right child's value should be larger than its parents. If the tree
- *  is imbalanced after a new node insertion, it can rotate the tree in proper ways to make 
+ *  is unbalanced after a new node insertion, it can rotate the tree in proper ways to make 
  *  it balanced again. 
  */
 public class AVLTree<E> extends BinarySearchTree<E> {
@@ -115,7 +115,8 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	/** rotate the appropriate nodes to make sure that the AVL
 	 *  tree is balanced (the two children's heights differs no larger than 1).
-	 *  The prevous node is two node linked in the left side. 
+	 *  The imbalance is caused by inserting in the left child of left subtree 
+	 *  of the current node.
 	 * @param current: the node that occurs an imbalance.
 	 * @modifies the tree by rotating it.
 	 * @return the node after rotation.
@@ -136,8 +137,8 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	/** rotate the appropriate nodes to make sure that the AVL
 	 *  tree is balanced (the two children's heights differs no larger than 1).
-	 *  The prevous node is one node in the left side and one node linked
-	 *  to it in the right side. 
+	 *  The imbalance is caused by inserting in the right child of left subtree 
+	 *  of the current node.
 	 * @param current: the node that occurs an imbalance.
 	 * @modifies the tree by rotating it.
 	 * @return the node after rotation.
@@ -149,8 +150,8 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	/** rotate the appropriate nodes to make sure that the AVL
 	 *  tree is balanced (the two children's heights differs no larger than 1).
-	 *  The prevous node is one node in the right side and one node linked
-	 *  to it in the left side. 
+	 *  The imbalance is caused by inserting in the left child of right subtree 
+	 *  of the current node.
 	 * @param current: the node that occurs an imbalance.
 	 * @modifies the tree by rotating it.
 	 * @return the node after rotation.
@@ -162,7 +163,8 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	/** rotate the appropriate nodes to make sure that the AVL
 	 *  tree is balanced (the two children's heights differs no larger than 1).
-	 *  The prevous node is two node linked in the right side. 
+	 *  The imbalance is caused by inserting in the right child of right subtree 
+	 *  of the current node.
 	 * @param current: the node that occurs an imbalance.
 	 * @modifies the tree by rotating it.
 	 * @return the node after rotation.
