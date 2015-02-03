@@ -37,7 +37,7 @@ public class Sorter {
     		heap.insert(array[i]);
     	}
     	int i = 0;
-    	while (heap.isEmpty()) {
+    	while (!heap.isEmpty()) {
     		array[i] = heap.deleteMin();
     		i++;
     	}

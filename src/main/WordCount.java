@@ -34,7 +34,7 @@ public class WordCount {
     // non-generic version first and then adjust it.
  	private static <E> DataCount<E>[] getCountsArray(DataCounter<E> counter) {
  		@SuppressWarnings("unchecked")
-		DataCount<E>[] array = (DataCount<E>[]) new Object[counter.getSize()];
+		DataCount<E>[] array = (DataCount<E>[]) new DataCount[counter.getSize()];
  		SimpleIterator<DataCount<E>> itr = counter.getIterator();
  		for (int i = 0; i < counter.getSize(); i++) {
  			array[i] = itr.next();
@@ -60,14 +60,33 @@ public class WordCount {
  	 *  spec.
  	 */
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: filename of document to analyze");
-            System.exit(1);
+        if (args.length != 3) {
+        	System.err.println("Incorrect number of arguments");
+        	System.exit(1);
         }
-        DataCounter<String> counter = new BinarySearchTree<String>(new StringComparator());
-        countWords(args[0], counter); 
-        DataCount<String>[] counts = getCountsArray(counter);
-        Sorter.insertionSort(counts, new DataCountStringComparator());
-        printDataCount(counts);
+        String dataType = args[0];
+        
+        DataCounter<String> data = null;
+        if (dataType.equals("-b")) {
+        	data = new BinarySearchTree<String>(new StringComparator());
+        } else if (dataType.equals("-a")) {
+        	data = new AVLTree<String>(new StringComparator());
+        } else if (dataType.equals("-m")) {
+        	data = new MoveToFrontList<String>(new StringComparator());
+        } else {
+        	System.err.println("To be implemented");
+        	System.exit(1);
+        }
+        countWords(args[args.length - 1], data);
+        DataCount<String>[] arr = getCountsArray(data);
+        if (args[1].equals("-is")) {
+        	Sorter.insertionSort(arr, new DataCountStringComparator());
+        } else if (args[1].equals("-hs")) {
+        	Sorter.heapSort(arr, new DataCountStringComparator());
+        } else {
+        	System.err.println("To be implemented");
+        	System.exit(1);
+        }
+        printDataCount(arr);
     }
 }
