@@ -1,34 +1,37 @@
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
 package phaseA;
 
 import providedCode.*;
 
 
+
 /**
- * TODO: REPLACE this comment with your own as appropriate.
- * 1. The list is typically not sorted.
- * 2. Add new items (with a count of 1) to the front of the list.
- * 3. Whenever an existing item has its count incremented by incCount
- *    or retrieved by getCount, move it to the front of the list. That
- *    means you remove the node from its current position and make it
- *    the first node in the list.
- * 4. You need to implement an iterator. The iterator SHOULD NOT move
- *    elements to the front.  The iterator should return elements in
- *    the order they are stored in the list, starting with the first
- *    element in the list.
- * TODO: Develop appropriate JUnit tests for your MoveToFrontList.
+ * This program can create a linked list that can keep move item to the 
+ * front of the list and increase its count by one when the item was called. 
+ * A new item with a count of 1 will be added to the front of the list. 
+ * Whenever an existing item was retrieved, we move it to the front of the list. 
  */
 public class MoveToFrontList<E> extends DataCounter<E> {
-	
+	//The pointer that point to the most front node in this list.
 	public ListNode front;
+	//The comparator that can compare the value of different nodes.
 	public Comparator<? super E> comparator;
 	
+	/**A class to construct the node of the list.*/
 	private class ListNode {
 		E data;
 		int count;
 		ListNode next;
 		
-		/* @param Count of the number of nodes.
-		 * @effects Constructs a new list node, store its count number as its data.*/
+		/** Constructs a new node with given count number as its value and makes it points to null.
+		 * @param Count of the number of nodes.
+		 * @effects Constructs a new list node, store its count number as its data.
+		 **/
 		public ListNode(E count) {
 			this.data = count;
 			this.count = 1;
@@ -36,18 +39,24 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		}
 	}
 	
-	/* @param A comparator.
-	 * @effects Constructs a new MoveToFrontList. */
+	/** Constructs a new list with given comparator and makes it points to null. 
+	 * @param A comparator that can compare the value of different nodes.
+	 * @effects Constructs a new MoveToFrontList. 
+	 **/
 	public MoveToFrontList(Comparator<? super E> c) {
 		this.comparator = c;
 		this.front = null;
 	}
 	
-	/* @param A data
+	/** Increases the count number of one existing node with the given value and move it to
+	 *  the front of the list; Add new node with the given value to the front if it is previously
+	 *  not in this list.
+	 * @param A data that indicates the value of a node.
 	 * @effects Find the node with this data in the MoveToFrontList,
 	 *          and move it from the original position to the front.
-	 *          If the list is null, add a new node with this data.
-	 *          If there is no this node, add a new node with this data to the front.*/
+	 *          If the list is empty, add a new node with this data.
+	 *          If there is no this node, add a new node with this data to the front.
+	 **/
 	@Override
 	public void incCount(E data) {
 		if (front == null) {
@@ -76,7 +85,9 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		}
 	}
     
-	/* @return The size of the MoveToFrontList */
+	/** Get the size of the current list.
+	 * @return The size of the MoveToFrontList 
+	 **/
 	@Override
 	public int getSize() {
 		int size = 0;
@@ -88,7 +99,8 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		return size;
 	}
 	
-	/** @param data: value of the node 
+	/** Get the count number of the node with the given value.
+	 * @param data: value of the node 
 	 * @requires this.front does not equal to null
 	 * @effect Move the node with the data to the front.
 	 * @return The count number of the node with the data
@@ -114,7 +126,13 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 		}
 		return 0;
 	}
-
+	
+	/** Constructs an iterator that can iterate over the whole list.
+	 * @effects creates an iterator that can iterate over the list
+	 *          without moving any nodes.
+	 * @exception If there is no elements in DataCount, throws NoSuchElementException. 
+	 * @return that iterator
+	 */
 	@Override
 	public SimpleIterator<DataCount<E>> getIterator() {
 		return new SimpleIterator<DataCount<E>>() {

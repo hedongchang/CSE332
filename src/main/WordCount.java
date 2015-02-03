@@ -11,8 +11,11 @@ import providedCode.*;
 public class WordCount {
 
 	
-	// TODO: Replace this comment with your own as appropriate.
-	// You may modify this method if you want.
+	/** Count words from a given file and put the result into a list.
+	 * @param file: the file need to count words.
+	 * @param counter: the list that contains the words with their count number.
+	 * @effects count words and put the words and their count number into a list.
+	 */
     private static void countWords(String file, DataCounter<String> counter) {
         try {
             FileWordReader reader = new FileWordReader(file);
@@ -28,10 +31,11 @@ public class WordCount {
     }
     
     
-    // TODO: Replace this comment with your own as appropriate.
-    // Implement a method that returns an array of DataCount objects
-    // containing each unique word.  If generics confuse you, write
-    // non-generic version first and then adjust it.
+    /** Return the current words list.
+     * @param counter: the current words list.
+     * @effects Iterate over the words list and return it. 
+     * @return a list with unique words.
+     */
  	private static <E> DataCount<E>[] getCountsArray(DataCounter<E> counter) {
  		@SuppressWarnings("unchecked")
 		DataCount<E>[] array = (DataCount<E>[]) new DataCount[counter.getSize()];
@@ -43,9 +47,10 @@ public class WordCount {
  	}
     
  	
-    // IMPORTANT: Used for grading. Do not modify the printing *format*!
-    // Otherwise you may modify this method (its signature, or internals) 
-    // if you want.
+ 	/** Print out the current words list.
+     * @param counts: the current words list.
+     * @effects print out the words list.
+     */
     private static void printDataCount(DataCount<String>[] counts) {
     	for (DataCount<String> c : counts) {
             System.out.println(c.count + "\t" + c.data);
@@ -54,18 +59,17 @@ public class WordCount {
     
     
     /** 
-     *  TODO: Replace this comment with your own as appropriate.  Edit
- 	 *  this method (including replacing the dummy parameter
- 	 *  checking below) to process all parameters as shown in the
- 	 *  spec.
+     *  Reads users' inputs, create a data type to store the word counts,
+     *  and implement a sorting algorithm to sort the word counts accordingly.
  	 */
     public static void main(String[] args) {
+    	// check whether the input is valid
         if (args.length != 3) {
         	System.err.println("Incorrect number of arguments");
         	System.exit(1);
         }
-        String dataType = args[0];
-        
+        // determine the data type to be used
+        String dataType = args[0];      
         DataCounter<String> data = null;
         if (dataType.equals("-b")) {
         	data = new BinarySearchTree<String>(new StringComparator());
@@ -77,6 +81,7 @@ public class WordCount {
         	System.err.println("To be implemented");
         	System.exit(1);
         }
+        // count the words and store them using the data type chosen above
         countWords(args[args.length - 1], data);
         DataCount<String>[] arr = getCountsArray(data);
         if (args[1].equals("-is")) {
@@ -87,6 +92,7 @@ public class WordCount {
         	System.err.println("To be implemented");
         	System.exit(1);
         }
+        // print out the sorted word counts
         printDataCount(arr);
     }
 }

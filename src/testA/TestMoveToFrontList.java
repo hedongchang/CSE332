@@ -17,7 +17,7 @@ public class TestMoveToFrontList extends TestDataCounter<String> {
 	private static final int TIMEOUT = 2000; // 2000ms = 2sec
 	
 	
-	/** Creates BinarySearchTree before each test cases **/
+	/** Creates MoveToFrontList before each test cases **/
 	@Override
 	public DataCounter<String> getDataCounter() {
 		return new MoveToFrontList<String>(new Comparator<String>() {
@@ -105,9 +105,67 @@ public class TestMoveToFrontList extends TestDataCounter<String> {
 
 	}	
 	
+	@Test(timeout = TIMEOUT)
+	public void test_first_getCount() {
+		String[] test = {"a", "b", "c", "d"};
+		for (String s: test) {
+			dc.incCount(s);
+		}
+		dc.getCount("c");
+		testFirst("any elements called should move to front", "c");
+	}
 	
+	@Test(timeout = TIMEOUT)
+	public void test_first_incCount() {
+		String[] test = {"a", "b", "c", "d"};
+		for (String s: test) {
+			dc.incCount(s);
+		}
+		dc.incCount("c");
+		testFirst("any elements called should move to front", "c");
+	}
 	
+	@Test(timeout = TIMEOUT)
+	public void test_new_first_incCount() {
+		String[] test = {"a", "b", "c", "d"};
+		for (String s: test) {
+			dc.incCount(s);
+		}
+		dc.incCount("f");
+		testFirst("any elements called should move to front", "f");
+	}
+	
+	@Test(timeout = TIMEOUT)
+	public void test_two_first_incCount() {
+		String[] test = {"a", "b", "c", "d", "e"};
+		for (String s: test) {
+			dc.incCount(s);
+		}
+		dc.incCount("c");
+		dc.incCount("b");
+		testFirst("any elements called should move to front", "b");
+	}
+	
+	@Test(timeout = TIMEOUT)
+	public void test_five_first_incCount() {
+		String[] test = {"a", "b", "c", "d", "e", "g", "h"};
+		for (String s: test) {
+			dc.incCount(s);
+		}
+		dc.incCount("c");
+		dc.incCount("b");
+		dc.incCount("h");
+		dc.incCount("e");
+		dc.incCount("d");
+		testFirst("any elements called should move to front", "d");
+	}
 	/** Private methods =====================================================**/
+	
+	private void testFirst(String message, String expected) {
+		SimpleIterator<DataCount<String>> itr = dc.getIterator();
+		String first = itr.next().data;
+		assertEquals(message, first, expected);
+	}
 
 	private void addAndTestSize(String message, String[] input, int unique) {
 		for (String s : input) { 

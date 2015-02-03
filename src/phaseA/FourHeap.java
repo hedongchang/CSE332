@@ -1,3 +1,10 @@
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
+
 package phaseA;
 import java.util.NoSuchElementException;
 
@@ -5,48 +12,30 @@ import providedCode.*;
 
 
 /**
- * TODO: Replace this comment with your own as appropriate.
- * 1. It is exactly like the binary heap we studied, except nodes
- *    should have 4 children instead of 2. Only leaves and at most one
- *    other node will have fewer children.
- * 2. Use an array-based implementation, beginning at index 0 (Root
- *    should be at index 0).  Construct the FourHeap by passing
- *    appropriate argument to superclass constructor.  Hint: Complete
- *    written homework #2 before attempting this.
- * 3. Throw appropriate exceptions in FourHeap whenever needed. For
- *    example, when deleteminIndex is on an empty heap, you could use
- *    UnderFlowException as is done in the Weiss text, or you could
- *    use NoSuchElementException (in which case it will be fine if you
- *    want to import it).
- * TODO: Develop appropriate JUnit tests for your FourHeap.
- * 
- * IMPORTANT NOTE:
- * 1. You MUST use the fields defined in the superclass!
- * 2. FourHeap should be a minIndex-HEAP, which means the "smallest"
- *    element according to the given comparator should be at the root. It
- *    is obvious from the name of methods, deleteminIndex() & findminIndex(),
- *    which should return the minIndeximum element determinIndexed by the given
- *    comparator. For example, the DataCountStringComparator considers
- *    the element with the highest count to be the "smallest", so when you
- *    call deleteminIndex() or findminIndex() your FourHeap should return the
- *    element with highest count.
- * 3. If you accidentally made it as MAX-HEAP instead of minIndex-HEAP, it
- *    will return the "largest" element (with
- *    DataCountStringComparator, this will be the one with lowest count) when
- *    deleteminIndex() is called, and you are going to lose considerable
- *    amount of FourHeap points.
- * 4. For Testing: Given the same comparator, FourHeap's deleteminIndex()
- *    should return the same element as Java's PriorityQueue's poll().
+* This is program uses array to implement a heap that each element can accept up to four children. 
+* The element containing minimum value will stay at the top of the heap. Whenever we insert or
+* delete an element, we need to move the related element to the appropriate position where 
+* its value is larger than the value of its parents (or at the top of the heap) and 
+* smaller than the value of its four children (or at the bottom of the heap).
  */
 public class FourHeap<E> extends Heap<E> {
 	
 	Comparator<? super E> comparator;
 	
+	/**constructs a comparator that can compare the elements in this heap.*/
 	public FourHeap(Comparator<? super E> c) {
 		super(10);
 		this.comparator = c;
 	}
-
+	
+	/** Inserts one new element with given value to the current heap
+	 * and move it to right position, where its value must larger than 
+	 * the value of its parents and smaller than its children.
+	 * @param Value of the new element
+	 * @requires Double the capacity of the array if the current is already full.
+	 * @modify the heap by inserting a new element with the given value to the heap
+	 *         and move it to the right position.
+	 */
 	@Override
 	public void insert(E val) {
 		if (size == heapArray.length - 1) {
@@ -58,7 +47,9 @@ public class FourHeap<E> extends Heap<E> {
 		heapArray[hole]  = val;
 	}
 	
-
+	/** Double the size of the heap.
+	 * @modify the heap by doubling the size of the heap
+	 */
 	@SuppressWarnings("unchecked")
 	private void doubleSize() {
 		E[] newArray = (E[]) new Object[heapArray.length * 2];
@@ -67,12 +58,29 @@ public class FourHeap<E> extends Heap<E> {
 		}
 		heapArray = newArray;
 	}
-
+	
+	/** Find the element with minimum value.
+	 * @effects find the element that contains minimum value
+	 * @requires the heap is not empty.
+	 * @exception if the heap is empty, throws NoSuchElementException.
+	 * @return the element with minimum value
+	 */
 	@Override
 	public E findMin() {
+		if (isEmpty()) {
+			throw new NoSuchElementException();
+		}
 		return heapArray[0];
 	}
-
+	
+	/** If one element is deleted, the last element at the bottom will be put into that hole,
+	 * it will be moved down to the appropriate position where its value must larger than 
+	 * the value of its parents and smaller than its children.
+	 * @modifies the heap by deleting the element with minimum value.
+	 * @requires the heap is not empty.
+	 * @exception if the heap is empty, throws NoSuchElementException.
+	 * @return the element with minimum value.
+	 */
 	@Override
 	public E deleteMin() {
 		if (isEmpty()) {
@@ -86,12 +94,27 @@ public class FourHeap<E> extends Heap<E> {
 		heapArray[hole] = val;	
 		return min;
 	}
-
+	
+	/** Check whether the current heap is empty.
+	 * @effects Check whether the heap is empty.
+	 * @return true if size is empty; false if not.
+	 */
 	@Override
 	public boolean isEmpty() {
 		return size == 0;
 	}
 	
+	/**
+	 * Compares the value of the element and the value of its parent.
+	 * If its value is smaller than the value of its parent,
+	 * we move it up one position by exchanging it with its parent.
+	 * This action continues until it finds a position where its
+	 * parent is smaller than it, or at the top of the heap.
+	 * @param hole: the index of the element need to be moved up.
+	 * @param val: the value of the element need to be moved up.
+	 * @requires the index of the hole is larger than 0.
+	 * @return the new position index of that element.
+	 */
 	private int percolateUp(int hole, E val) {
 		while (hole > 0 && comparator.compare(val, 
 				heapArray[(hole-1) / 4]) < 0) {
@@ -101,6 +124,17 @@ public class FourHeap<E> extends Heap<E> {
 		return hole;
 	}
 	
+	/**
+	 * Compares the value of the element and the value of its four children. 
+	 * If one of its children is smaller than it, we move the element down one
+	 * position by exchanging it with its children. This action continues 
+	 * until the element find a position where all its four children are larger 
+	 * than it or it approaches the bottom of the heap.
+	 * @param hole: the index of the element need to be moved down.
+	 * @param val: the value of the element need to be moved down.
+	 * @requires the index of its parent should not exceed the size of the heap.
+	 * @return the index of new position of that element.
+	 */
 	private int percolateDown(int hole, E val) {
 		while (4*hole + 1 < size) {			
 			int minIndex = 4 * hole + 1;

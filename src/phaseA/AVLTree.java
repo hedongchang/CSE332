@@ -1,59 +1,71 @@
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
+
 package phaseA;
 import providedCode.*;
 
 
-/**
- * TODO: REPLACE this comment with your own as appropriate.
- * AVLTree must be a subclass of BinarySearchTree<E> and must use
- * inheritance and calls to superclass methods to avoid unnecessary
- * duplication or copying of functionality.
- * 1. Create a subclass of BSTNode, perhaps named AVLNode.
- * 2. Override incCount method such that it creates AVLNode instances
- *    instead of BSTNode instances.
- * 3. Do NOT "replace" the left and right fields in BSTNode with new
- *    left and right fields in AVLNode.  This will instead mask the
- *    super-class fields (i.e., the resulting node would actually have
- *    four node fields, with code accessing one pair or the other
- *    depending on the type of the references used to access the
- *    instance).  Such masking will lead to highly perplexing and
- *    erroneous behavior. Instead, continue using the existing BSTNode
- *    left and right fields.
- * 4. Cast left and right fields to AVLNode whenever necessary in your
- *    AVLTree. This will result a lot of casts, so you can also follow
- *    the hints given during section to reduce the number of casts.
- * 5. Do NOT override the dump method of BinarySearchTree & the toString
- *    method of DataCounter. They are used for grading.
- * TODO: Develop appropriate JUnit tests for your AVLTree (TestAVLTree
- * in testA package).
+/** This program creates an AVL tree. It requires the heights of two children of a node differ
+ *  in no larger than 1, in which case it is balanced. The top of the tree
+ *  will be the minimum value of this tree. The left child's value should be smaller than
+ *  its parent, and the right child's value should be larger than its parents. If the tree
+ *  is imbalanced after a new node insertion, it can rotate the tree in proper ways to make 
+ *  it balanced again. 
  */
 public class AVLTree<E> extends BinarySearchTree<E> {
 	
+	/** Creates a class that constructs the node for the AVL tree.
+	 * @author caijuan
+	 */
 	private class AVLNode extends BSTNode {
+		//the height of the node
 		public int height;
 		
+		/** Constructs the node with the given value.
+		 * @param data: the value of the node.
+		 */
 		public AVLNode(E data) {
 			super(data);
 			this.height = 0;
 		}
 	}
     
-	/*@effects Constructs a new AVL Tree.*/
+	/** Constructs a AVL tree.
+	 * @effects Constructs a new AVL Tree with a comparator that can
+	 *          compare the values of different nodes.
+	 */
 	public AVLTree(Comparator<? super E> c) {
 		super(c);
 	}
 	
-	/*@param General type data
-	  @effects  */
+	/** Increase the count of the node with the given value. 
+	 * @param data: the value of a new node
+	 * @modifies the AVL tree when there is no node contains the given data by adding
+	 *           it to the tree and make the count be one.
+	 * @effects increase the count of the existing node that contains the given data by one.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void incCount(E data) {
 		overallRoot = insert((AVLNode) overallRoot, data);
 	}
 	
+	/** Get the height of the current tree.
+	 * @return height: the height of the root.
+	 */
 	public int getHeight() {
 		return height(overallRoot);
 	}
 	
+	/** Insert a new node to the AVL tree with the given data as its value.
+	 * @param current: the current node that built most recently.
+	 * @param data: the data of inserted node.
+	 * @return the new inserted node.
+	 */
 	@SuppressWarnings("unchecked")
 	private AVLNode insert(AVLNode current, E data) {
 		if (current == null) {
@@ -88,6 +100,10 @@ public class AVLTree<E> extends BinarySearchTree<E> {
     	return current;
 	}
 	
+	/** 
+	 * @param current: the given node
+	 * @return height: the height of that node.
+	 */
 	@SuppressWarnings("unchecked")
 	private int height(BSTNode current) {
 		if (current == null) {
@@ -97,7 +113,13 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 	    }
 	}
 	
-	//singleRotateRight
+	/** rotate the appropriate nodes to make sure that the AVL
+	 *  tree is balanced (the two children's heights differs no larger than 1).
+	 *  The prevous node is two node linked in the left side. 
+	 * @param current: the node that occurs an imbalance.
+	 * @modifies the tree by rotating it.
+	 * @return the node after rotation.
+	 */
 	@SuppressWarnings("unchecked")
 	private AVLNode rotateLeftLeft(BSTNode current) {
 		BSTNode left = current.left;
@@ -112,19 +134,39 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 		return newCurrent;
 	}
 	
-	//doubleRotateRight
+	/** rotate the appropriate nodes to make sure that the AVL
+	 *  tree is balanced (the two children's heights differs no larger than 1).
+	 *  The prevous node is one node in the left side and one node linked
+	 *  to it in the right side. 
+	 * @param current: the node that occurs an imbalance.
+	 * @modifies the tree by rotating it.
+	 * @return the node after rotation.
+	 */
 	private AVLNode rotateLeftRight(BSTNode current) {
 		current.left = rotateRightRight(current.left);
 		return rotateLeftLeft(current);
 	}
 	
-	//doubleRotateLeft
+	/** rotate the appropriate nodes to make sure that the AVL
+	 *  tree is balanced (the two children's heights differs no larger than 1).
+	 *  The prevous node is one node in the right side and one node linked
+	 *  to it in the left side. 
+	 * @param current: the node that occurs an imbalance.
+	 * @modifies the tree by rotating it.
+	 * @return the node after rotation.
+	 */
 	private AVLNode rotateRightLeft(BSTNode current) {
 		current.right = rotateLeftLeft(current.right);
 		return rotateRightRight(current);
 	}
 	
-	//singleRotateLeft
+	/** rotate the appropriate nodes to make sure that the AVL
+	 *  tree is balanced (the two children's heights differs no larger than 1).
+	 *  The prevous node is two node linked in the right side. 
+	 * @param current: the node that occurs an imbalance.
+	 * @modifies the tree by rotating it.
+	 * @return the node after rotation.
+	 */
 	@SuppressWarnings("unchecked")
 	private AVLNode rotateRightRight(BSTNode current) {
 		BSTNode right = current.right;
