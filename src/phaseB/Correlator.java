@@ -25,7 +25,7 @@ import phaseA.*;
  * Make sure WordCount and Correlator do not print anything other than
  * what they are supposed to print (e.g. do not print timing info, input size). To
  * avoid this, copy these files into package writeupExperiment and
- * change it there as needed for your write-up experiments.
+ * change it there as needed for your write-up experiments. 
  */
 public class Correlator {
 	
