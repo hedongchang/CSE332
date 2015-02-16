@@ -12,6 +12,9 @@ import java.util.EmptyStackException;
  */
 public class GArrayStack<T> implements GStack<T> {
 		
+		public static final int INITIAL_SIZE = 10;
+		public static final int RE_SIZE = 2;
+		
 		private int top;
 		// index that indicates the top of a stack
 		private T[] stack;
@@ -23,7 +26,7 @@ public class GArrayStack<T> implements GStack<T> {
 		@SuppressWarnings("unchecked")
 		public GArrayStack() {
 			this.top = -1;
-			this.stack = (T[]) new Object[10];
+			this.stack = (T[]) new Object[INITIAL_SIZE];
 		}
 		
 		/**
@@ -34,7 +37,7 @@ public class GArrayStack<T> implements GStack<T> {
 		@SuppressWarnings("unchecked")
 		private void resize() {
 			int length = stack.length;
-			T[] newStack = (T[]) new Object[length * 2];
+			T[] newStack = (T[]) new Object[length * RE_SIZE];
 			for (int i = 0; i < length; i++) {
 				newStack[i] = stack[i];
 			}
@@ -51,16 +54,16 @@ public class GArrayStack<T> implements GStack<T> {
 		
 		/**
 		 * push one element at the top of the stack
-		 * @param T d: the element desired to be pushed
+		 * @param T data: the element desired to be pushed
 		 * @modifies top of the stack
 		 * @effects push d in the stack and the top points to d
 		 */
-		public void push(T d) {
+		public void push(T data) {
 			if (top == stack.length - 1) {
 				resize();
 			}
 			top++;
-			stack[top] = d;
+			stack[top] = data;
 		}
 		
 		/**
@@ -72,7 +75,7 @@ public class GArrayStack<T> implements GStack<T> {
 		 * @throws EmptyStackException if stack is empty
 		 */
 		public T pop() {
-			if (top == -1) {
+			if (isEmpty()) {
 				throw new EmptyStackException();
 			}
 			T data = stack[top];
@@ -86,7 +89,7 @@ public class GArrayStack<T> implements GStack<T> {
 		 * @throws EmptyStackException if stack is empty
 		 */
 		public T peek() {
-			if (top == -1) {
+			if (isEmpty()) {
 				throw new EmptyStackException();
 			}
 			return stack[top];

@@ -1,7 +1,12 @@
+/**
+ * Dongchang
+ */
 package main;
 import java.io.IOException;
 
 import phaseA.*;
+import phaseB.HashTable;
+import phaseB.StringHasher;
 import providedCode.*;
 
 /**
@@ -57,6 +62,16 @@ public class WordCount {
         }
     }
     
+    private static void printDataCount(DataCount<String>[] counts, int k) {
+    	if (k > counts.length) {
+    		k = counts.length;
+    	}
+    	for (int i = 0; i < k; i++) {
+    		DataCount<String> c = counts[i];
+            System.out.println(c.count + "\t" + c.data);
+        }
+    }
+    
     
     /** 
      *  Reads users' inputs, create a data type to store the word counts,
@@ -64,7 +79,7 @@ public class WordCount {
  	 */
     public static void main(String[] args) {
     	// check whether the input is valid
-        if (args.length != 3) {
+        if (args.length != 3 && args.length != 4) {
         	System.err.println("Incorrect number of arguments");
         	System.exit(1);
         }
@@ -77,6 +92,8 @@ public class WordCount {
         	data = new AVLTree<String>(new StringComparator());
         } else if (dataType.equals("-m")) {
         	data = new MoveToFrontList<String>(new StringComparator());
+        } else if (dataType.equals("-h")) {
+        	data =new HashTable<String>(new StringComparator(), new StringHasher());
         } else {
         	System.err.println("To be implemented");
         	System.exit(1);
@@ -88,11 +105,20 @@ public class WordCount {
         	Sorter.insertionSort(arr, new DataCountStringComparator());
         } else if (args[1].equals("-hs")) {
         	Sorter.heapSort(arr, new DataCountStringComparator());
+        } else if (args[1].equals("-os")) {
+        	Sorter.insertionSort(arr, new DataCountStringComparator());
+        } else if (args[1].equals("-k")) {
+        	int k = Integer.parseInt(args[2]);
+        	Sorter.topKSort(arr, new DataCountStringComparator(), k);
         } else {
-        	System.err.println("To be implemented");
+        	System.err.println("Illegal sorter name");
         	System.exit(1);
         }
-        // print out the sorted word counts
-        printDataCount(arr);
+        if (!args[1].equals("-k")) {
+        	printDataCount(arr);
+        } else {
+        	int k = Integer.parseInt(args[2]);
+        	printDataCount(arr, k);
+        }
     }
 }

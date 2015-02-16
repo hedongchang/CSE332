@@ -1,4 +1,5 @@
 package phaseB;
+import phaseA.GArrayStack;
 import providedCode.*;
 
 
@@ -25,33 +26,123 @@ import providedCode.*;
  * TODO: Develop appropriate JUnit tests for your HashTable.
  */
 public class HashTable<E> extends DataCounter<E> {
-
+	public static int[] PRIMES = {37, 73, 149, 307, 683, 1279, 2423, 5113, 
+		10039, 20393, 50333, 105913, 199961};
 	
+	private HashNode[] items;
+	private Comparator<? super E> comparator;
+	private Hasher<E> hasher;
+	private int capacity;
+	private int primeCount;
+	
+	private class HashNode {
+		private E data;
+		private int count;
+		private HashNode next;
+		
+		public HashNode(E data, int count, HashNode next) {
+			this.data = data;
+			this.count = count;
+			this.next = next;
+		}
+	}
+	@SuppressWarnings("unchecked")
 	public HashTable(Comparator<? super E> c, Hasher<E> h) {
-		// TODO: To-be implemented
+		comparator = c;
+		hasher = h;
+		primeCount = 0;
+		items = (HashNode[]) new HashTable.HashNode[PRIMES[0]];
+		capacity = 0;
 	}
 	
+	/**
+	 * incCount increments the count of a bucket if it exists, otherwise
+	 * it creates a new bucket and adds it to the HashTable. Rehashes the
+	 * table if the load factor exceeds .75
+	 * @param data is the element that the count will be incremented on
+	 */
 	@Override
 	public void incCount(E data) {
-		// TODO Auto-generated method stub
+		double loadFactor = (double) getSize() / items.length;
+		if (loadFactor > 0.75 && primeCount < PRIMES.length) {
+			reHash();
+		}
+		
+		int hash = hasher.hash(data) % items.length;
+		HashNode bucket = items[hash];
+		while (bucket != null) {
+			if (comparator.compare(bucket.data, data) == 0) {
+				bucket.count++;
+				return;
+			}
+			bucket = bucket.next;
+		}
+				items[hash] = new HashNode(data, 1, items[hash]);
+		capacity++;
 	}
-
+	
+	private void reHash() {
+		primeCount++;
+		int length2 = PRIMES[primeCount];
+		@SuppressWarnings("unchecked")
+		HashNode[] newItems = (HashNode[]) new HashTable.HashNode[length2];
+		for (int i = 0; i < items.length; i++) {
+			HashNode node = items[i];
+			while (node != null) {
+				int hashCode = hasher.hash(node.data);
+				int index = hashCode % newItems.length;
+				newItems[index] = new HashNode(node.data, node.count, newItems[index]);
+				node = node.next;
+			}
+		}
+		items = newItems;
+	}
+	
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return capacity;
 	}
-
+	
 	@Override
 	public int getCount(E data) {
-		// TODO Auto-generated method stub
+		int hashCode = hasher.hash(data);
+		int index = hashCode % items.length;
+		HashNode current = items[index];
+		while (current != null) {
+			int cmp = comparator.compare(current.data, data);
+			if (cmp == 0) {
+				return current.count;
+			}
+			current = current.next;
+		}
 		return 0;
 	}
 
 	@Override
 	public SimpleIterator<DataCount<E>> getIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SimpleIterator<DataCount<E>>() {  
+			GArrayStack<HashNode> stack = new GArrayStack<HashNode>();
+			{
+				for (int i = 0; i < items.length; i++) {
+					if (items[i] != null) {
+						stack.push(items[i]);
+					}
+				}
+			}
+		    public boolean hasNext() {
+		    	return !stack.isEmpty();
+		    }
+		    public DataCount<E> next() {
+		       if(!hasNext()) {
+		        	throw new java.util.NoSuchElementException();
+		        }
+		        HashNode next = stack.pop();
+		        if (next.next != null) {
+		        	stack.push(next.next);
+		        }
+		        return new DataCount<E>(next.data, next.count);
+		    }
+		};
 	}
 
 }

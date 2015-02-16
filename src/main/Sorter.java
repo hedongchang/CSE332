@@ -66,11 +66,61 @@ public class Sorter {
      * print method or add another print method for topKSort.
      */
     public static <E> void topKSort(E[] array, Comparator<E> comparator, int k) {
-    	// TODO: To-be implemented (the order of elements at index >= k does not matter)
+    	if (k > array.length) {
+    		k = array.length;
+    	}
+    	FourHeap<E> heap = new FourHeap<E>(comparator);
+    	for (int i = 0; i < array.length; i++) {
+    		if (i >= k && comparator.compare(array[i], heap.findMin()) > 0) {
+    			heap.deleteMin();
+    		}
+    		heap.insert(array[i]);
+    	}
+    	for (int i = k - 1; i >= 0; i--) {
+    		array[i] = heap.deleteMin();
+    	}
     }
     
     public static <E> void otherSort(E[] array, Comparator<E> comparator) {
-    	// TODO: To-be implemented (either mergeSort or QuickSort)
+    	mergeSort(array, comparator, 0, array.length);
+    }
+    
+    private static <E> void mergeSort(E[] array, Comparator<E> comparator, 
+    		int left, int right) {
+    	if (left < right) {
+    		int center = (left + right) / 2;
+    		mergeSort(array, comparator, left, center);
+    		mergeSort(array, comparator, center + 1, right);
+    		merge(array, comparator, left, center + 1, right);
+    	}
+    	
+    }
+    
+    @SuppressWarnings("unchecked")
+	private static <E> void merge(E[] array, Comparator<E> comparator, 
+    		int left, int center, int right) {
+    	E[] temp = (E[]) new Object[array.length];
+    	for (int i = 0; i < temp.length; i++) {
+    		temp[i] = array[i];
+    	}
+    	int leftIndex = left;
+    	int rightIndex = center + 1;
+    	int resultIndex = left;
+    	while (leftIndex <= center && rightIndex <= right) {
+    		if (comparator.compare(temp[leftIndex], temp[rightIndex]) < 0) {
+    			array[resultIndex] = temp[leftIndex];
+    			leftIndex++;
+    		} else {
+    			array[resultIndex] = temp[rightIndex];
+    			rightIndex++;
+    		}
+    		resultIndex++;
+    	}
+    	while (leftIndex <= center) {
+    		array[resultIndex] = temp[leftIndex];
+    		resultIndex++;
+    		leftIndex++;
+    	}
     }
 
 }
