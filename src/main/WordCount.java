@@ -19,7 +19,7 @@ public class WordCount {
 	/** Count words from a given file and put the result into a list.
 	 * @param file: the file need to count words.
 	 * @param counter: the list that contains the words with their count number.
-	 * @effects count words and put the words and their count number into a list.
+	 *  @effects count words and put the words and their count number into a list.
 	 */
     private static void countWords(String file, DataCounter<String> counter) {
         try {
