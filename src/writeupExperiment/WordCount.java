@@ -1,9 +1,10 @@
 /**
  * Dongchang
  */
-package main;
+package writeupExperiment;
 import java.io.IOException;
 
+import main.Sorter;
 import phaseA.*;
 import phaseB.HashTable;
 import phaseB.StringHasher;
@@ -51,27 +52,6 @@ public class WordCount {
  		return array;
  	}
     
- 	
- 	/** Print out the current words list.
-     * @param counts: the current words list.
-     * @effects print out the words list.
-     */
-    private static void printDataCount(DataCount<String>[] counts) {
-    	for (DataCount<String> c : counts) {
-            System.out.println(c.count + "\t" + c.data);
-        }
-    }
-    
-    private static void printDataCount(DataCount<String>[] counts, int k) {
-    	if (k > counts.length) {
-    		k = counts.length;
-    	}
-    	for (int i = 0; i < k; i++) {
-    		DataCount<String> c = counts[i];
-            System.out.println(c.count + "\t" + c.data);
-        }
-    }
-    
     
     /** 
      *  Reads users' inputs, create a data type to store the word counts,
@@ -93,7 +73,7 @@ public class WordCount {
         } else if (dataType.equals("-m")) {
         	data = new MoveToFrontList<String>(new StringComparator());
         } else if (dataType.equals("-h")) {
-        	data =new HashTable<String>(new StringComparator(), new StringHasher());
+        	data =new HashTable<String>(new StringComparator(), new NewStringHasher());
         } else {
         	System.err.println("To be implemented");
         	System.exit(1);
@@ -113,12 +93,6 @@ public class WordCount {
         } else {
         	System.err.println("Illegal sorter name");
         	System.exit(1);
-        }
-        if (!args[1].equals("-k")) {
-        	printDataCount(arr);
-        } else {
-        	int k = Integer.parseInt(args[2]);
-        	printDataCount(arr, k);
         }
     }
 }

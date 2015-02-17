@@ -81,46 +81,46 @@ public class Sorter {
     	}
     }
     
+    @SuppressWarnings("unchecked")
     public static <E> void otherSort(E[] array, Comparator<E> comparator) {
-    	mergeSort(array, comparator, 0, array.length);
+    	E[] temp = (E[]) new Object[array.length];
+    	mergeSort(array, temp, comparator, 0, array.length - 1);
     }
     
-    private static <E> void mergeSort(E[] array, Comparator<E> comparator, 
+    private static <E> void mergeSort(E[] array, E[] temp, Comparator<E> comparator, 
     		int left, int right) {
     	if (left < right) {
     		int center = (left + right) / 2;
-    		mergeSort(array, comparator, left, center);
-    		mergeSort(array, comparator, center + 1, right);
-    		merge(array, comparator, left, center + 1, right);
+    		mergeSort(array, temp, comparator, left, center);
+    		mergeSort(array, temp, comparator, center + 1, right);
+    		merge(array, temp, comparator, left, center + 1, right);
     	}
     	
     }
     
-    @SuppressWarnings("unchecked")
-	private static <E> void merge(E[] array, Comparator<E> comparator, 
-    		int left, int center, int right) {
-    	E[] temp = (E[]) new Object[array.length];
-    	for (int i = 0; i < temp.length; i++) {
-    		temp[i] = array[i];
-    	}
-    	int leftIndex = left;
-    	int rightIndex = center + 1;
-    	int resultIndex = left;
-    	while (leftIndex <= center && rightIndex <= right) {
-    		if (comparator.compare(temp[leftIndex], temp[rightIndex]) < 0) {
-    			array[resultIndex] = temp[leftIndex];
-    			leftIndex++;
-    		} else {
-    			array[resultIndex] = temp[rightIndex];
-    			rightIndex++;
-    		}
-    		resultIndex++;
-    	}
-    	while (leftIndex <= center) {
-    		array[resultIndex] = temp[leftIndex];
-    		resultIndex++;
-    		leftIndex++;
-    	}
-    }
+	private static <E> void merge(E[] array, E[] temp, Comparator<E> comparator, 
+    		int left, int right, int rightEnd) {
+		int leftEnd = right - 1;
+        int tempIndex = left;
+        int num = rightEnd - left + 1;
 
+        while(left <= leftEnd && right <= rightEnd)
+            if (comparator.compare(array[left], array[right]) <= 0) {
+                temp[tempIndex++] = array[left++];
+            } else {
+                temp[tempIndex++] = array[right++];
+            }
+
+        while (left <= leftEnd) {   // Copy rest of first half
+            temp[tempIndex++] = array[left++];
+        }
+
+        while (right <= rightEnd)  // Copy rest of right half
+            temp[tempIndex++] = array[right++];
+
+        // Copy tmp back
+        for(int i = 0; i < num; i++, rightEnd--) {
+            array[rightEnd] = temp[rightEnd];
+        }
+	}
 }

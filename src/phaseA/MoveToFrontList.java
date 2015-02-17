@@ -22,6 +22,8 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	//The comparator that can compare the value of different nodes.
 	public Comparator<? super E> comparator;
 	
+	public int size;
+	
 	/**A class to construct the node of the list.*/
 	private class ListNode {
 		E data;
@@ -46,6 +48,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	public MoveToFrontList(Comparator<? super E> c) {
 		this.comparator = c;
 		this.front = null;
+		this.size = 0;
 	}
 	
 	/** Increases the count number of one existing node with the given value and move it to
@@ -61,6 +64,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	public void incCount(E data) {
 		if (front == null) {
            this.front = new ListNode(data);
+           size++;
 		} else {
 			if (comparator.compare(data, front.data) == 0) {
 				front.count++;
@@ -82,6 +86,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 			ListNode newFront = new ListNode(data);
 			newFront.next = front;
 			front = newFront;
+			size++;
 		}
 	}
     
@@ -90,13 +95,7 @@ public class MoveToFrontList<E> extends DataCounter<E> {
 	 **/
 	@Override
 	public int getSize() {
-		int size = 0;
-		ListNode current = front;
-		while (current != null) {
-			size++;
-			current = current.next;
-		}
-		return size;
+		return this.size;
 	}
 	
 	/** Get the count number of the node with the given value.
