@@ -26,8 +26,10 @@ import providedCode.*;
  * TODO: Develop appropriate JUnit tests for your HashTable.
  */
 public class HashTable<E> extends DataCounter<E> {
-	public static int[] PRIMES = {37, 73, 149, 307, 683, 1279, 2423, 5113, 
+	public static final int[] PRIMES = {37, 73, 149, 307, 683, 1279, 2423, 5113, 
 		10039, 20393, 50333, 105913, 199961};
+	
+	public static final double LOAD_FACTOR = 0.75;
 	
 	private HashNode[] items;
 	private Comparator<? super E> comparator;
@@ -63,11 +65,10 @@ public class HashTable<E> extends DataCounter<E> {
 	 */
 	@Override
 	public void incCount(E data) {
-		double loadFactor = (double) getSize() / items.length;
-		if (loadFactor > 0.75 && primeCount < PRIMES.length) {
+		double loadFactor = (double) capacity / items.length;
+		if (loadFactor > LOAD_FACTOR && primeCount < PRIMES.length) {
 			reHash();
 		}
-		
 		int hash = hasher.hash(data) % items.length;
 		HashNode bucket = items[hash];
 		while (bucket != null) {
@@ -77,7 +78,7 @@ public class HashTable<E> extends DataCounter<E> {
 			}
 			bucket = bucket.next;
 		}
-				items[hash] = new HashNode(data, 1, items[hash]);
+		items[hash] = new HashNode(data, 1, items[hash]);
 		capacity++;
 	}
 	
@@ -145,4 +146,7 @@ public class HashTable<E> extends DataCounter<E> {
 		};
 	}
 
+	public int tableLength() {
+		return items.length;
+	}
 }

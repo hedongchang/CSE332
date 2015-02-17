@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import main.Sorter;
 import phaseA.*;
+import phaseB.DataCountTopKComparator;
 import phaseB.HashTable;
 import phaseB.StringHasher;
 import providedCode.*;
@@ -22,7 +23,7 @@ public class WordCount {
 	 * @param counter: the list that contains the words with their count number.
 	 *  @effects count words and put the words and their count number into a list.
 	 */
-    private static void countWords(String file, DataCounter<String> counter) {
+    public static void countWords(String file, DataCounter<String> counter) {
         try {
             FileWordReader reader = new FileWordReader(file);
             String word = reader.nextWord();
@@ -42,7 +43,7 @@ public class WordCount {
      * @effects Iterate over the words list and return it. 
      * @return a list with unique words.
      */
- 	private static <E> DataCount<E>[] getCountsArray(DataCounter<E> counter) {
+ 	public static <E> DataCount<E>[] getCountsArray(DataCounter<E> counter) {
  		@SuppressWarnings("unchecked")
 		DataCount<E>[] array = (DataCount<E>[]) new DataCount[counter.getSize()];
  		SimpleIterator<DataCount<E>> itr = counter.getIterator();
@@ -50,8 +51,7 @@ public class WordCount {
  			array[i] = itr.next();
  		}
  		return array;
- 	}
-    
+ 	}    
     
     /** 
      *  Reads users' inputs, create a data type to store the word counts,
@@ -73,7 +73,11 @@ public class WordCount {
         } else if (dataType.equals("-m")) {
         	data = new MoveToFrontList<String>(new StringComparator());
         } else if (dataType.equals("-h")) {
-        	data =new HashTable<String>(new StringComparator(), new NewStringHasher());
+        	data = new HashTable<String>(new StringComparator(), new StringHasher());
+        } else if (dataType.equals("-ns")) {
+        	data = new HashTable<String>(new StringComparator(), new NewStringHasher());
+        } else if (dataType.equals("-ns2")) {
+        	data = new HashTable<String>(new StringComparator(), new NewStringHasher2());
         } else {
         	System.err.println("To be implemented");
         	System.exit(1);
@@ -89,7 +93,7 @@ public class WordCount {
         	Sorter.otherSort(arr, new DataCountStringComparator());
         } else if (args[1].equals("-k")) {
         	int k = Integer.parseInt(args[2]);
-        	Sorter.topKSort(arr, new DataCountStringComparator(), k);
+        	Sorter.topKSort(arr, new DataCountTopKComparator(), k);
         } else {
         	System.err.println("Illegal sorter name");
         	System.exit(1);

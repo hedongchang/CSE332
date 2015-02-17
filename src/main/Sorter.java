@@ -7,6 +7,7 @@
 package main;
 import phaseA.FourHeap;
 import providedCode.Comparator;
+import providedCode.Heap;
 
 
 /** 
@@ -41,14 +42,12 @@ public class Sorter {
      * @effects Sort the given array.
      */
     public static <E> void heapSort(E[] array, Comparator<E> comparator) {
-    	FourHeap<E> heap = new FourHeap<E>(comparator);
+    	Heap<E> heap = new FourHeap<E>(comparator);
     	for (int i = 0; i < array.length; i++) {
     		heap.insert(array[i]);
     	}
-    	int i = 0;
-    	while (!heap.isEmpty()) {
+    	for (int i = 0; i < array.length; i++) {
     		array[i] = heap.deleteMin();
-    		i++;
     	}
     }
     
@@ -66,19 +65,26 @@ public class Sorter {
      * print method or add another print method for topKSort.
      */
     public static <E> void topKSort(E[] array, Comparator<E> comparator, int k) {
-    	if (k > array.length) {
+    	if (k <= 0) {
+    		throw new IllegalArgumentException();
+    	}
+    	if (k >= array.length) {
     		k = array.length;
     	}
-    	FourHeap<E> heap = new FourHeap<E>(comparator);
-    	for (int i = 0; i < array.length; i++) {
-    		if (i >= k && comparator.compare(array[i], heap.findMin()) > 0) {
-    			heap.deleteMin();
-    		}
+    	Heap<E> heap = new FourHeap<E>(comparator);
+    	for (int i = 0; i < k; i++) {
     		heap.insert(array[i]);
     	}
+    	
+    	for (int i = k; i < array.length; i++) {
+    		if (comparator.compare(array[i], heap.findMin()) >= 0) {
+    			heap.deleteMin();
+    			heap.insert(array[i]);
+    		}
+    	}   	
     	for (int i = k - 1; i >= 0; i--) {
     		array[i] = heap.deleteMin();
-    	}
+    	}	
     }
     
     @SuppressWarnings("unchecked")

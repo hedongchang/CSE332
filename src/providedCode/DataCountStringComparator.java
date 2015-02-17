@@ -3,9 +3,8 @@ import phaseA.*;
 
 /**
  * A Comparator for DataCount<String> that sorts two data-counts in the order
- * we need for the output of WordCount: Higher frequency comes first and
+ * we need for the output of WordCount: Lower frequency comes first and
  * frequency ties are resolved in alphabetical order.
- * Uses StringComparator, which you must implement.
  */
 public class DataCountStringComparator implements Comparator<DataCount<String>>{
 	StringComparator alphabetical = new StringComparator();

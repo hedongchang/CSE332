@@ -5,6 +5,7 @@ package main;
 import java.io.IOException;
 
 import phaseA.*;
+import phaseB.DataCountTopKComparator;
 import phaseB.HashTable;
 import phaseB.StringHasher;
 import providedCode.*;
@@ -109,7 +110,7 @@ public class WordCount {
         	Sorter.otherSort(arr, new DataCountStringComparator());
         } else if (args[1].equals("-k")) {
         	int k = Integer.parseInt(args[2]);
-        	Sorter.topKSort(arr, new DataCountStringComparator(), k);
+        	Sorter.topKSort(arr, new DataCountTopKComparator(), k);
         } else {
         	System.err.println("Illegal sorter name");
         	System.exit(1);
