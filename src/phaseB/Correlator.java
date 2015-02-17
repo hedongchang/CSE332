@@ -33,7 +33,13 @@ public class Correlator {
 	private static final double LOWER = 0.0001;
 	
     public static void main(String[] args) {
+    	if (args.length != 3) {
+    		System.err.println("Incorrect number of arguments");
+        	System.exit(1);
+    	}
     	double variance = 0.0;        
+    	String file1 = args[1];
+    	String file2 = args[2];
     	DataCounter<String> counter1 = null;
     	DataCounter<String> counter2 = null;
     	String dataType = args[0];
@@ -53,8 +59,8 @@ public class Correlator {
     	}
     	
     	
-    	int length1 = countFrequency("hamlet.txt", counter1);
-    	int length2 = countFrequency("the-new-atlantis.txt", counter2);
+    	int length1 = countFrequency(file1, counter1);
+    	int length2 = countFrequency(file2, counter2);
     	
     	SimpleIterator<DataCount<String>> itr = counter1.getIterator();
     	while (itr.hasNext()) {
