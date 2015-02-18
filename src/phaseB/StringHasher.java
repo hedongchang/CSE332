@@ -11,11 +11,11 @@ import providedCode.Hasher;
  */
 public class StringHasher implements Hasher<String> {
 	
-	@Override
 	/** Returns a hash code that is generated from a given string s. 
 	 * @param s: a given string
 	 * @return a hash code integer
 	 */
+	@Override
 	public int hash(String s) {
 		int result = 0;
 		for (int i = 0; i < s.length(); i++) {

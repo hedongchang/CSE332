@@ -36,10 +36,10 @@ public class Sorter {
         }
     }
     
-    /** Sort the array from minimum value to maximum value
+    /** Sort the array from minimum priority to maximum priority
      * @param array that needs to be sorted
-     * @param comparator
-     * @effects Sort the given array.
+     * @param comparator for comparing values
+     * @effects Sort the given array from the least priority to most priority
      */
     public static <E> void heapSort(E[] array, Comparator<E> comparator) {
     	Heap<E> heap = new FourHeap<E>(comparator);
@@ -51,18 +51,11 @@ public class Sorter {
     	}
     }
     
-    /**
-     * TODO: REPLACE this comment with your own as appropriate.  In
-     * topKSort, you will need to use a different comparator which
-     * considers the element with the lowest count to be the
-     * "smallest". You should *NOT* change how your FourHeap
-     * interprets the comparator result.  The heap should always interpret
-     * a negative number from the comparator as the first argument being
-     * "smaller" than the second.
-     * 
-     * Make sure topK sort only prints the first k elements. In 
-     * WordCount, you can either modify the signature of the existing
-     * print method or add another print method for topKSort.
+    /** Sort the first k elements in the array from maximum priority to minimum priority
+     * @param k the number of elements that need to be sorted
+     * @param array that needs to be sorted
+     * @param comparator for comparing values
+     * @effects Sort the given array from the least priority to most priority
      */
     public static <E> void topKSort(E[] array, Comparator<E> comparator, int k) {
     	if (k <= 0) {
@@ -87,12 +80,24 @@ public class Sorter {
     	}	
     }
     
+    /** Sort the array from minimum priority to maximum priority
+     * @param array that needs to be sorted
+     * @param comparator for comparing values
+     * @effects Sort the given array from the least priority to most priority
+     */
     @SuppressWarnings("unchecked")
     public static <E> void otherSort(E[] array, Comparator<E> comparator) {
     	E[] temp = (E[]) new Object[array.length];
     	mergeSort(array, temp, comparator, 0, array.length - 1);
     }
     
+    /** Sort the array from minimum priority to maximum priority
+     * @param array that needs to be sorted
+     * @param temp the array that holds temporary data
+     * @param comparator for comparing values
+     * @param left the start index of the left half of array
+     * @param right the start index of the right half of array
+     */
     private static <E> void mergeSort(E[] array, E[] temp, Comparator<E> comparator, 
     		int left, int right) {
     	if (left < right) {
@@ -104,27 +109,37 @@ public class Sorter {
     	
     }
     
+    /**
+     * Merge two sorted arrays in one array
+     * @param array that needs to be sorted
+     * @param temp the array that holds temporary data
+     * @param comparator for comparing values
+     * @param left the start index of the left half of array
+     * @param right the start index of the right half of array
+     * @param rightEnd the end index of the right half of array
+     */
 	private static <E> void merge(E[] array, E[] temp, Comparator<E> comparator, 
     		int left, int right, int rightEnd) {
 		int leftEnd = right - 1;
         int tempIndex = left;
         int num = rightEnd - left + 1;
 
-        while(left <= leftEnd && right <= rightEnd)
+        while(left <= leftEnd && right <= rightEnd) {
             if (comparator.compare(array[left], array[right]) <= 0) {
                 temp[tempIndex++] = array[left++];
             } else {
                 temp[tempIndex++] = array[right++];
             }
+        }
 
-        while (left <= leftEnd) {   // Copy rest of first half
+        while (left <= leftEnd) {   // Copy rest of the left half
             temp[tempIndex++] = array[left++];
         }
 
-        while (right <= rightEnd)  // Copy rest of right half
+        while (right <= rightEnd)  // Copy rest of the right half
             temp[tempIndex++] = array[right++];
 
-        // Copy tmp back
+        // Copy temp back
         for(int i = 0; i < num; i++, rightEnd--) {
             array[rightEnd] = temp[rightEnd];
         }

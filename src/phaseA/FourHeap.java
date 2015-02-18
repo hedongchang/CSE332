@@ -19,13 +19,16 @@ import providedCode.*;
 * smaller than the value of its four children (or at the bottom of the heap).
  */
 public class FourHeap<E> extends Heap<E> {
+	public static final int DEFAULT_SIZE = 10;
+    public static final int RE_SIZE = 2;
 	
-	Comparator<? super E> comparator;
+	private Comparator<? super E> comparator;
 	
 	/**constructs a comparator that can compare the elements in this heap.*/
 	public FourHeap(Comparator<? super E> c) {
-		super(10);
+		super(DEFAULT_SIZE);
 		this.comparator = c;
+		this.size = 0;
 	}
 	
 	/** Inserts one new element with given value to the current heap
@@ -39,7 +42,7 @@ public class FourHeap<E> extends Heap<E> {
 	@Override
 	public void insert(E val) {
 		if (size == heapArray.length - 1) {
-			doubleSize();
+			reSize();
 		}
 		int hole = size;
 		size++;
@@ -51,8 +54,8 @@ public class FourHeap<E> extends Heap<E> {
 	 * @modify the heap by doubling the size of the heap
 	 */
 	@SuppressWarnings("unchecked")
-	private void doubleSize() {
-		E[] newArray = (E[]) new Object[heapArray.length * 2];
+	private void reSize() {
+		E[] newArray = (E[]) new Object[heapArray.length * RE_SIZE];
 		for(int i = 0; i < heapArray.length; i++) {
 			newArray[i] = heapArray[i];
 		}
@@ -143,14 +146,11 @@ public class FourHeap<E> extends Heap<E> {
 			}
 			if(comparator.compare(heapArray[minIndex], val) < 0) {
 				heapArray[hole] = heapArray[minIndex];
-			} else  {
+			} else {
 				break;
 			}
 			hole = minIndex;
 		}
 		return hole;
 	}
-	
-
-
 }

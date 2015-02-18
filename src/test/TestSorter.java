@@ -1,3 +1,10 @@
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
+
 package test;
 
 import main.Sorter;

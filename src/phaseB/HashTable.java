@@ -118,9 +118,9 @@ public class HashTable<E> extends DataCounter<E> {
 	 */
 	private void reHash() {
 		primeCount++;
-		int length2 = PRIMES[primeCount];
+		int newLength = PRIMES[primeCount];
 		@SuppressWarnings("unchecked")
-		HashNode[] newItems = (HashNode[]) new HashTable.HashNode[length2];
+		HashNode[] newItems = (HashNode[]) new HashTable.HashNode[newLength];
 		for (int i = 0; i < items.length; i++) {
 			HashNode node = items[i];
 			while (node != null) {

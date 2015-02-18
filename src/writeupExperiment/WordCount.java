@@ -1,5 +1,8 @@
 /**
- * Dongchang
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
  */
 package writeupExperiment;
 import java.io.IOException;
@@ -61,6 +64,10 @@ public class WordCount {
     	// check whether the input is valid
         if (args.length != 3 && args.length != 4) {
         	System.err.println("Incorrect number of arguments");
+        	System.exit(1);
+        }
+        if (args.length == 4 && !args[1].equals("-k")) {
+        	System.err.println("Only top k sort can have 4 arguments");
         	System.exit(1);
         }
         // determine the data type to be used

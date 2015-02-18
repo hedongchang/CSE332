@@ -1,6 +1,9 @@
-// CSE 332 Project 2 Phase B
-// 2/17/2015
-// DONGCHANG HE & JUAN CAI
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
 package phaseB;
 
 import java.io.IOException;

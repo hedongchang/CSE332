@@ -18,11 +18,11 @@ import providedCode.*;
  */
 public class MoveToFrontList<E> extends DataCounter<E> {
 	//The pointer that point to the most front node in this list.
-	public ListNode front;
+	private ListNode front;
 	//The comparator that can compare the value of different nodes.
-	public Comparator<? super E> comparator;
+	private Comparator<? super E> comparator;
 	
-	public int size;
+	private int size;
 	
 	/**A class to construct the node of the list.*/
 	private class ListNode {
@@ -149,5 +149,4 @@ public class MoveToFrontList<E> extends DataCounter<E> {
         	}
 		};
 	}
-
 }

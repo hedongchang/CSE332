@@ -1,3 +1,10 @@
+/**
+ * Dongchang He & Juan Cai
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
+ * Instructor: Anderson Ruth
+ */
+
 package phaseA;
 import providedCode.*;
 
@@ -48,6 +55,7 @@ public class GArrayStack<T> implements GStack<T> {
 		 * Determine whether the stack is empty
 		 * @return true if the stack is empty, false otherwise
 		 */
+		@Override
 		public boolean isEmpty() {
 			return top == -1;
 		}

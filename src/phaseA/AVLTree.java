@@ -19,11 +19,11 @@ import providedCode.*;
 public class AVLTree<E> extends BinarySearchTree<E> {
 	
 	/** Creates a class that constructs the node for the AVL tree.
-	 * @author caijuan
+	 * @author Dongchang He, Cai Juan
 	 */
 	private class AVLNode extends BSTNode {
 		//the height of the node
-		public int height;
+		private int height;
 		
 		/** Constructs the node with the given value.
 		 * @param data: the value of the node.
@@ -71,7 +71,6 @@ public class AVLTree<E> extends BinarySearchTree<E> {
 		if (current == null) {
 			return new AVLNode(data);
 		}
-
 		int cmp = comparator.compare(data, current.data);
     	if (cmp == 0) {            // a. Current node is a match
     		current.count++;

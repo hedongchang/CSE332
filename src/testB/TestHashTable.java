@@ -1,12 +1,12 @@
-package testB;
-import static org.junit.Assert.*;
-
 /**
  * Dongchang He & Juan Cai
- * CSE 332B Project 2 Phase B
- * 2/17/2015
+ * CSE 332B Project 2 Phase A
+ * 2/2/2015
  * Instructor: Anderson Ruth
  */
+
+package testB;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
@@ -19,12 +19,9 @@ import providedCode.Comparator;
 import providedCode.DataCount;
 import providedCode.SimpleIterator;
 
-
 public class TestHashTable {
 	private static final int TIMEOUT = 2000; // 2000ms = 2sec
-	private HashTable<String> table;
-	private static final String empty = "";
-	
+	private HashTable<String> table;	
 	
 	public HashTable<String> getDataCounter() {
 		return new HashTable<String>(new Comparator<String> () {
@@ -40,9 +37,9 @@ public class TestHashTable {
 	/** Test incCount ===========================================================**/
 	@Test(timeout = TIMEOUT)
 	public void test_incCount_empty() {
-		table.incCount(empty);
+		table.incCount("");
 		assertEquals("Empty string cannot be added to the hash table.", 1, table.getSize());
-		table.incCount(empty);
+		table.incCount("");
 		assertEquals("Empty string cannot be added to the hash table.", 1, table.getSize());
 	}
 	
@@ -154,19 +151,19 @@ public class TestHashTable {
 	/** Test getCount ===========================================================**/
 	@Test(timeout = TIMEOUT)
 	public void test_getCount_empty() {
-		assertEquals("There is no empty string in the initial table.", 0, table.getCount(empty));
-		table.incCount(empty);
+		assertEquals("There is no empty string in the initial table.", 0, table.getCount(""));
+		table.incCount("");
 		assertEquals("Empty string cannot be added to the hash table.", 1, table.getSize());
-		assertEquals(1, table.getCount(empty));
-		table.incCount(empty);
-		assertEquals("Empty string was added two times into the table.", 2, table.getCount(empty));
+		assertEquals(1, table.getCount(""));
+		table.incCount("");
+		assertEquals("Empty string was added two times into the table.", 2, table.getCount(""));
 	}
 	
 	@Test(timeout = TIMEOUT)
 	public void test_getCount_normal_unique() {
 		String[] testArray = {"a", "b", "c", "d"};
 		addAndTestSize("The string cannot be incremented.", testArray, 4);
-		assertEquals("The count of the string is wrong.", 0, table.getCount(empty));
+		assertEquals("The count of the string is wrong.", 0, table.getCount(""));
 		assertEquals("The count of the string is wrong.", 1, table.getCount("a"));
 		assertEquals("The count of the string is wrong.", 1, table.getCount("b"));
 		assertEquals("The count of the string is wrong.", 1, table.getCount("c"));
@@ -177,7 +174,7 @@ public class TestHashTable {
 	public void test_getCount_normal_duplicate() {
 		String[] testArray = {"a", "b", "c", "d", "d", "c", "a", "c"};
 		addAndTestSize("The string cannot be incremented.", testArray, 4);
-		assertEquals("The count of the string is wrong.", 0, table.getCount(empty));
+		assertEquals("The count of the string is wrong.", 0, table.getCount(""));
 		assertEquals("The count of the string is wrong.", 2, table.getCount("a"));
 		assertEquals("The count of the string is wrong.", 1, table.getCount("b"));
 		assertEquals("The count of the string is wrong.", 3, table.getCount("c"));
@@ -202,7 +199,7 @@ public class TestHashTable {
 	public void test_getCount_normal_duplicate_three() {
 		String[] testArray = {"a", "a", "a", "b", "b", "b", "b", "c", ""};
 		addAndTestSize("The string cannot be incremented.", testArray, 4);
-		assertEquals("The count of the string is wrong.", 1, table.getCount(empty));
+		assertEquals("The count of the string is wrong.", 1, table.getCount(""));
 		assertEquals("The count of the string is wrong.", 3, table.getCount("a"));
 		assertEquals("The count of the string is wrong.", 4, table.getCount("b"));
 		assertEquals("The count of the string is wrong.", 1, table.getCount("c"));
@@ -303,15 +300,3 @@ public class TestHashTable {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
