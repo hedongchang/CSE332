@@ -1,60 +1,81 @@
+// CSE 332 Project 2 Phase B
+// 2/17/2015
+// DONGCHANG HE & JUAN CAI
 package phaseB;
-import phaseA.GArrayStack;
 import providedCode.*;
 
-
 /**
- * TODO: Replace this comment with your own as appropriate.
- * 1. You may implement any kind of HashTable discussed in class; the
- *    only restriction is that it should not restrict the size of the
- *    input domain (i.e., it must accept any key) or the number of
- *    inputs (i.e., it must grow as necessary).
- * 2. You should use this implementation with the -h option.
- * 3. Your HashTable should rehash as appropriate (use load factor as
- *    shown in the class).
- * 4. To use your HashTable for WordCount, you will need to be able to
- *    hash strings. Implement your own hashing strategy using charAt
- *    and length. Do NOT use Java's hashCode method.
- * 5. HashTable should be able to grow at least up to 200,000. We are
- *    not going to test input size over 200,000 so you can stop
- *    resizing there (of course, you can make it grow even larger but
- *    it is not necessary).
- * 6. We suggest you to hard code the prime numbers. You can use this
- *    list: http://primes.utm.edu/lists/small/100000.txt NOTE: Make
- *    sure you only hard code the prime numbers that are going to be
- *    used. Do NOT copy the whole list!
- * TODO: Develop appropriate JUnit tests for your HashTable.
+ * This program implements a hash table that can store data. We store data to the front of a list of hash node on a 
+ * a particular position of the hash table. We use our hash function to generate the position that we will put data in. 
+ * @author dongchang he & caijuan
  */
 public class HashTable<E> extends DataCounter<E> {
+	
+	// PRIMES is a constant, a collection of numbers that indicate the capacity of the hash table. 
+	// The capacity of table will be increased to the next capacity number in this collection every
+	// time we rehash it. 
 	public static final int[] PRIMES = {37, 73, 149, 307, 683, 1279, 2423, 5113, 
 		10039, 20393, 50333, 105913, 199961};
 	
+	// LOAD_FACTOR is a constant indicates the data percentage of a capacity that the capacity can handle. 
+	// We will increase the capacity of the table to the next level in PRIMES if the current data percentage
+	// is larger than the LOAD_FACTOR. 
 	public static final double LOAD_FACTOR = 0.75;
 	
+	// items: The collection contains all the hash nodes of the hash table. 
 	private HashNode[] items;
+	// comparator: A comparator that can compare the value of items
 	private Comparator<? super E> comparator;
+	// hasher: a hash function
 	private Hasher<E> hasher;
-	private int capacity;
+	// size: the current number of items in table
+	private int size;
+	// primeCount: the index of PRIMES collection that indicates the current index of capacity of the hash table.
+	//             It starts with 0 and cannot exceed the length - 1 of PRIMES. 
 	private int primeCount;
 	
+	/**
+	 * HashNode is a node in a position of the hash table and can connect to other nodes that are in that position. 
+	 * Each node stores the passed in data and also the count numbers of that data. Every time a new data put in the table,
+	 * the count of it will be 1 at the beginning, and will increase later if users put the same data to the table. 
+	 * @author caijuan & dongchang he
+	 */
 	private class HashNode {
+		// data: the data stored in the node
 		private E data;
+		// count: the count numbers of that data
 		private int count;
+		// next: get the next node that connect to the current node
 		private HashNode next;
 		
+		/**
+		 * Constructs a new hash node with given data, count numbers, and put it in the front of the linked list in
+		 * its position of the table by connecting it to the given next node.
+		 * @param data
+		 * @param count
+		 * @param next
+		 */
 		public HashNode(E data, int count, HashNode next) {
 			this.data = data;
 			this.count = count;
 			this.next = next;
 		}
 	}
+	
+	
+	/**
+	 * Constructs a hash table with given comparator and hash function. 
+	 * @requires the initial primeCount to be 0. (set the table to the initial capacity) & the size to be 0.
+	 * @param c: a comparator
+	 * @param h: a hash function
+	 */
 	@SuppressWarnings("unchecked")
 	public HashTable(Comparator<? super E> c, Hasher<E> h) {
 		comparator = c;
 		hasher = h;
 		primeCount = 0;
-		items = (HashNode[]) new HashTable.HashNode[PRIMES[0]];
-		capacity = 0;
+		items = (HashNode[]) new HashTable.HashNode[PRIMES[primeCount]];
+		size = 0;
 	}
 	
 	/**
@@ -62,10 +83,14 @@ public class HashTable<E> extends DataCounter<E> {
 	 * it creates a new bucket and adds it to the HashTable. Rehashes the
 	 * table if the load factor exceeds .75
 	 * @param data is the element that the count will be incremented on
+	 * @modifies items
+	 * @effects insert a new data to the items table or increase the count value an existed data in items table by one.
+	 * @modifies size
+	 * @effects increase the size by one
 	 */
 	@Override
 	public void incCount(E data) {
-		double loadFactor = (double) capacity / items.length;
+		double loadFactor = (double) size / items.length;
 		if (loadFactor > LOAD_FACTOR && primeCount < PRIMES.length) {
 			reHash();
 		}
@@ -79,9 +104,18 @@ public class HashTable<E> extends DataCounter<E> {
 			bucket = bucket.next;
 		}
 		items[hash] = new HashNode(data, 1, items[hash]);
-		capacity++;
+		size++;
 	}
 	
+	/**
+	 * Rehash the table by increasing the capacity of the table to the next level in PRIMES.
+	 * @modifies primeCount
+	 * @effects increase the primeCount by one
+	 * @modifies items
+	 * @effects increase the size of the items to the next capacity level 
+	 *          with index of the new primeCount in PRIMES and copy all the previous nodes in the old table
+	 *          to the new table.
+	 */
 	private void reHash() {
 		primeCount++;
 		int length2 = PRIMES[primeCount];
@@ -99,11 +133,18 @@ public class HashTable<E> extends DataCounter<E> {
 		items = newItems;
 	}
 	
+	/** Gets the size of the whole table
+	 * @return the current number of nodes in the table.
+	 */
 	@Override
 	public int getSize() {
-		return capacity;
+		return size;
 	}
 	
+	/** Gets the count value of a data. 
+	 * @param data
+	 * @return the count value of the data in the table; If the data isn't in the table, return 0.
+	 */
 	@Override
 	public int getCount(E data) {
 		int hashCode = hasher.hash(data);
@@ -119,33 +160,42 @@ public class HashTable<E> extends DataCounter<E> {
 		return 0;
 	}
 
+	/**
+	 * Returns an iterator for this hash table.
+	 * @return an iterator that can iterate over all of the nodes in this table.
+	 */
 	@Override
 	public SimpleIterator<DataCount<E>> getIterator() {
 		return new SimpleIterator<DataCount<E>>() {  
-			GArrayStack<HashNode> stack = new GArrayStack<HashNode>();
-			{
-				for (int i = 0; i < items.length; i++) {
-					if (items[i] != null) {
-						stack.push(items[i]);
-					}
-				}
-			}
+			HashNode current  = items[0]; 
+			int size = getSize();
+			int index = 0;
+			
 		    public boolean hasNext() {
-		    	return !stack.isEmpty();
+		    	return size != 0;
 		    }
 		    public DataCount<E> next() {
 		       if(!hasNext()) {
 		        	throw new java.util.NoSuchElementException();
 		        }
-		        HashNode next = stack.pop();
-		        if (next.next != null) {
-		        	stack.push(next.next);
-		        }
-		        return new DataCount<E>(next.data, next.count);
+		        while (index < items.length) {
+		        	if (current != null) {
+		        		size--;
+		        		HashNode result = current;
+		        		current = current.next;
+		        		return new DataCount<E>(result.data, result.count);
+		        	}
+		        	index++;
+		        	current = items[index];
+ 		        }
+		        return null;
 		    }
 		};
 	}
 
+	/** Gets the current capacity of the whole table. 
+	 * @return the current length (capacity) of the whole table
+	 */
 	public int tableLength() {
 		return items.length;
 	}

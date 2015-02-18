@@ -1,6 +1,6 @@
-/**
- * Dongchang
- */
+// CSE 332 Project 2 Phase B
+// 2/17/2015
+// DONGCHANG HE & JUAN CAI
 package main;
 import java.io.IOException;
 
@@ -12,7 +12,8 @@ import providedCode.*;
 
 /**
  * An executable that counts the words in a files and prints out the counts in
- * descending order. You will need to modify this file.
+ * descending order. 
+ * @author caijuan & dongchang he
  */
 public class WordCount {
 
@@ -20,7 +21,7 @@ public class WordCount {
 	/** Count words from a given file and put the result into a list.
 	 * @param file: the file need to count words.
 	 * @param counter: the list that contains the words with their count number.
-	 *  @effects count words and put the words and their count number into a list.
+	 * @throw IOException if an error occurs in file processing.
 	 */
     private static void countWords(String file, DataCounter<String> counter) {
         try {
@@ -39,7 +40,6 @@ public class WordCount {
     
     /** Return the current words list.
      * @param counter: the current words list.
-     * @effects Iterate over the words list and return it. 
      * @return a list with unique words.
      */
  	private static <E> DataCount<E>[] getCountsArray(DataCounter<E> counter) {
@@ -55,7 +55,6 @@ public class WordCount {
  	
  	/** Print out the current words list.
      * @param counts: the current words list.
-     * @effects print out the words list.
      */
     private static void printDataCount(DataCount<String>[] counts) {
     	for (DataCount<String> c : counts) {
@@ -63,6 +62,11 @@ public class WordCount {
         }
     }
     
+    /**
+     * print the counts of the data
+     * @param counts: a list of data that needs to be sorted
+     * @param k: the kth number in the counts list that needs to be printed out.
+     */
     private static void printDataCount(DataCount<String>[] counts, int k) {
     	if (k > counts.length) {
     		k = counts.length;
@@ -82,6 +86,10 @@ public class WordCount {
     	// check whether the input is valid
         if (args.length != 3 && args.length != 4) {
         	System.err.println("Incorrect number of arguments");
+        	System.exit(1);
+        }
+        if (args.length == 4 && !args[1].equals("-k")) {
+        	System.err.println("Only top k sort can have 4 arguments");
         	System.exit(1);
         }
         // determine the data type to be used

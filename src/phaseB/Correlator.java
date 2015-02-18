@@ -1,3 +1,6 @@
+// CSE 332 Project 2 Phase B
+// 2/17/2015
+// DONGCHANG HE & JUAN CAI
 package phaseB;
 
 import java.io.IOException;
@@ -7,29 +10,14 @@ import phaseA.*;
 
 
 /**
- * TODO: REPLACE this comment with your own as appropriate.
- * 
- * This should be done using a *SINGLE* iterator. This means only 1
- * iterator being used in Correlator.java, *NOT* 1 iterator per
- * DataCounter (You should call dataCounter.getIterator() just once in
- * Correlator.java).
- * Hint: Take advantage of DataCounter's method.
- * 
- * Although you can share argument processing code with WordCount, it
- * will be easier to copy & paste it from WordCount and modify it here
- * - it is up to you. Since WordCount does not have states, making
- * private method public to share with Correlator is OK. In general,
- * you are not forbidden to make private method public, just make sure
- * it does not violate style guidelines.
- * 
- * Make sure WordCount and Correlator do not print anything other than
- * what they are supposed to print (e.g. do not print timing info, input size). To
- * avoid this, copy these files into package writeupExperiment and
- * change it there as needed for your write-up experiments. 
+ * This program can compare the two files to see how many overlaps are in these two files. 
+ * @author caijuan & dongchang he
  */
 public class Correlator {
 	
+	// If the frequency of the word exceeds UPPER, we ignore it.
 	private static final double UPPER = 0.01;
+	// If the frequency of the word is less than LOWER, we ignore it.
 	private static final double LOWER = 0.0001;
 	
     public static void main(String[] args) {
@@ -81,6 +69,12 @@ public class Correlator {
     	System.out.println(variance);
     }
     
+    /**
+     * Counts the frequency of the word in a given file. 
+     * @param fileName: the name of the file
+     * @param counter
+     * @return the count number of the word in that file.
+     */
     private static int countFrequency(String fileName, DataCounter<String> counter) {
 		int count = 0;
     	try {

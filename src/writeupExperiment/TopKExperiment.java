@@ -18,13 +18,13 @@ public class TopKExperiment {
 				new StringHasher());
 	    WordCount.countWords(FILE, counter);
 	    DataCount<String>[] array = WordCount.getCountsArray(counter);
-	    for (int i = 1; i <= array.length; i = i + 50) {
-
+	    for (int i = 1; i <= array.length; i = i + 25) {
 			System.out.println("top " + i + ": " + getAverageRuntime(new HashTable<String>
 			(new StringComparator(), new StringHasher()), i));
+			
+			System.out.println("merge sort: " + getAverageRuntime(new HashTable<String>
+			(new StringComparator(), new StringHasher()), -1));
 		}
-		System.out.println("\nmerge sort: " + getAverageRuntime(new HashTable<String>
-		(new StringComparator(), new StringHasher()), -1));
 	}
 	
 	
